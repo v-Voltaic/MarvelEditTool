@@ -31,6 +31,25 @@ namespace MarvelData
         public static StringBuilder sb = new StringBuilder();
         public static Dictionary<long, string> cmdNames;
 
+        public static int[] anmChrIndexOffsets = {
+            0, // 0 movement
+            0x1e, // 1 blocking
+            0x32,
+            0x3c,  //3 Damage
+            0x64,  //4 Knockdown
+            0x82,  //Non combat
+            0x96,  // normals?
+            0xAA,  // airdashes?
+            0xBE,  // 8 specials
+            0xDC,  //9 supers
+            0xF0,  //10 ?? dormamu air spell charge
+            0x104, // 11 Capture States
+            0x12C, //12 Anmtdown
+            0x154, //13 Misc
+            0x168, //14 TAC and Launcher
+            0x17C, // 15 flight
+            0x190  //16 etc
+        };
         public static string InitCmdNames(string filename = "AnmChrCmds.cfg")
         {
             AELogger.Log("InitCmdNames " + filename);
@@ -343,14 +362,15 @@ namespace MarvelData
 
             if (cmdName.Contains("0_01 ") || cmdName.Contains("0_02 ") || cmdName.Contains("0_04 ") || cmdName.Contains("0_1C ")) //GotoIf
             {
-                
+
                 byte[] V1 = new byte[4];
                 byte[] V2 = new byte[4];
                 byte[] V3 = new byte[4];
                 string condition = "";
                 int subSize = subsubEntry.Length;
                 //Need to get command length to avoid crashes when file too small
-                if (subsubEntry.Length >= 12) {
+                if (subsubEntry.Length >= 12)
+                {
                     Array.Copy(subsubEntry, subsubEntry.Length - 12, V1, 0, 4);
                     Array.Copy(subsubEntry, subsubEntry.Length - 8, V2, 0, 4);
                     Array.Copy(subsubEntry, subsubEntry.Length - 4, V3, 0, 4);
@@ -359,15 +379,7 @@ namespace MarvelData
 
                 }
 
-                if (cmdName.Contains("0_04 ") && subSize == 40)
-                {
-                    string GoTo = BitConverter.ToInt32(V3, 0).ToString("D");
-                    string Var2 = BitConverter.ToSingle(V1, 0).ToString();
-                    if (IsDebug) { newName = "Debug "; }
-                    newName = newName + "0_04 Goto Frame " + GoTo + " If " + condition + " " + Var2 + " Frames";
-                    return newName;
-                }
-                else if (cmdName.Contains("0_01 ")&& subSize == 40)
+                else if (cmdName.Contains("0_01 ") && subSize == 40)
                 {
                     string GoTo = BitConverter.ToInt32(V3, 0).ToString("X");
                     string vInt = BitConverter.ToInt32(V1, 0).ToString();
@@ -383,9 +395,17 @@ namespace MarvelData
                     newName = newName + "0_02 GoTo Frame " + GoTo + " If " + condition + " " + vInt;
                     return newName;
                 }
+                if (cmdName.Contains("0_04 ") && subSize == 40)
+                {
+                    string GoTo = BitConverter.ToInt32(V3, 0).ToString("D");
+                    string Var2 = BitConverter.ToSingle(V1, 0).ToString();
+                    if (IsDebug) { newName = "Debug "; }
+                    newName = newName + "0_04 Goto Frame " + GoTo + " If " + condition + " " + Var2 + " Frames";
+                    return newName;
+                }
                 else if (cmdName.Contains("0_1C ") && subSize == 24)
                 {
-                    string GoTo = BitConverter.ToInt32(V3, 0).ToString("X");
+                    string GoTo = BitConverter.ToInt32(V3, 0).ToString("D");
                     if (IsDebug) { newName = "Debug "; }
                     newName = newName + "0_1C GoTo Frame " + GoTo;
                     return newName;
@@ -396,9 +416,50 @@ namespace MarvelData
                 }
             }
 
+            else if (cmdName.Contains("0_07 ")) //Goto Cmd (Revisit this later)  
+            {
+                if (subsubEntry.Length == 24)
+                {
+                    string commandName = "0_07 GotoCmd ";
+                    byte[] V1 = new byte[4];
+                    Array.Copy(subsubEntry, subsubEntry.Length - 12, V1, 0, 4);
+                    string S1 = BitConverter.ToInt32(V1, 0).ToString("D"); //Remember to add this code later to visually show the commands added to the If statement
+
+                    if (IsDebug) { newName = "Debug "; }
+                    return newName + commandName + "(" + S1 + " Commands)";
+                }
+            }
+            else if (cmdName.Contains("0_08 ")) //Goto Cmd If (Revisit this later)  
+            {
+                if (subsubEntry.Length == 40)
+                {
+                    string commandName = "0_08 GotoCmd If ";
+                    byte[] V1 = new byte[4];
+                    byte[] V2 = new byte[4];
+                    byte[] V3 = new byte[4];
+                    Array.Copy(subsubEntry, subsubEntry.Length - 12, V1, 0, 4);
+                    string S1 = BitConverter.ToInt32(V1, 0).ToString();
+                    Array.Copy(subsubEntry, subsubEntry.Length - 8, V2, 0, 4);
+                    Condition flags = (Condition)BitConverter.ToUInt32(V2, 0);
+                    string condition = flags.ToString("F");
+
+                    Array.Copy(subsubEntry, subsubEntry.Length - 4, V3, 0, 4);
+                    string S3 = BitConverter.ToInt32(V3, 0).ToString("D"); //Remember to add this code later to visually show the commands added to the If statement
+
+                    if (IsDebug) { newName = "Debug "; }
+                    return newName + commandName + condition + " " + S1 + " (" + S3 + " Commands)";
+                }
+                else
+                {
+                    return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
+                }
+            }
+
+
             else if (cmdName.Contains("0_21 ")) //Play Anim
             {
-                if (subsubEntry.Length == 48) {
+                if (subsubEntry.Length == 48)
+                {
                     string commandName = "0_21 Play Animation";
                     byte[] lmt = new byte[4];
                     byte[] anim = new byte[4];
@@ -445,7 +506,7 @@ namespace MarvelData
                     byte[] lmt = new byte[4];
                     byte[] anim = new byte[4];
                     byte[] skip = new byte[4];
-                    byte[] blend = new byte[4]; 
+                    byte[] blend = new byte[4];
                     Array.Copy(subsubEntry, subsubEntry.Length - 24, condition, 0, 4);
                     Array.Copy(subsubEntry, subsubEntry.Length - 20, lmt, 0, 4);
                     Array.Copy(subsubEntry, subsubEntry.Length - 16, anim, 0, 4);
@@ -486,6 +547,36 @@ namespace MarvelData
             }
 
 
+            else if (cmdName.Contains("1_00 ")) //Goto Anmchr Script 
+            {
+                if (subsubEntry.Length == 32)
+                {
+                    string commandName = "1_00 GoTo Anmchr Script ";
+                    byte[] V1 = new byte[4];
+                    Array.Copy(subsubEntry, subsubEntry.Length - 8, V1, 0, 4);
+                    byte[] V2 = new byte[4];
+                    Array.Copy(subsubEntry, subsubEntry.Length - 4, V2, 0, 4);
+                    int I1 = BitConverter.ToInt32(V1, 0);
+                    string S1 = "";
+                    if (IsDebug) { newName = "Debug "; }
+                    if (I1 < 0x10)
+                    {
+                        S1 = (anmChrIndexOffsets[I1] + BitConverter.ToInt32(V2, 0)).ToString("X3");
+                    }
+                    else
+                    {
+                        return newName + commandName + "(ERRh)";
+                    }
+
+                    return newName + commandName + "(" + S1 + "h)";
+                }
+                else
+                {
+                    return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
+                }
+            }
+
+
 
             else if (cmdName.Contains("1_2F") || cmdName.Contains("1_30") || cmdName.Contains("1_31") || cmdName.Contains("1_32") || cmdName.Contains("1_33") || cmdName.Contains("1_34"))  //AirGroundState
             {
@@ -514,16 +605,18 @@ namespace MarvelData
                 {
                     commandName = "1_34 Check Air/Ground State";
                 }
-                if (subsubEntry.Length == 24) { 
-                byte[] last4Bytes = new byte[4];
-                Array.Copy(subsubEntry, subsubEntry.Length - 4, last4Bytes, 0, 4);
-                AirGroundState flags = (AirGroundState)BitConverter.ToUInt32(last4Bytes, 0);
-                string flagNames = flags.ToString("F");
+                if (subsubEntry.Length == 24)
+                {
+                    byte[] last4Bytes = new byte[4];
+                    Array.Copy(subsubEntry, subsubEntry.Length - 4, last4Bytes, 0, 4);
+                    AirGroundState flags = (AirGroundState)BitConverter.ToUInt32(last4Bytes, 0);
+                    string flagNames = flags.ToString("F");
 
                     if (IsDebug) { newName = "Debug "; }
                     return newName + commandName + " (" + flagNames + ")";
                 }
-                else {
+                else
+                {
                     return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
                 }
             }
@@ -589,6 +682,38 @@ namespace MarvelData
                     {
                         return newName + "1_DB subtract " + meter + " meter (10000 = 1 Meter bar)";
                     }
+                }
+                else
+                {
+                    return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
+                }
+            }
+
+
+            else if (cmdName.Contains("1_FF ")|| cmdName.Contains("1_101 ")|| cmdName.Contains("1_102 ")) //Check Charge Input
+            {
+                string commandName = " ";
+                
+                if (subsubEntry.Length == 24)
+                {
+                    if (cmdName.Contains("1_FF "))
+                    {
+                        commandName = "1_FF Check Button Hold ";
+                    }
+                    else if (cmdName.Contains("1_101 "))
+                    {
+                        commandName = "1_101 Check Button Mash ";
+                    }
+                    else if (cmdName.Contains("1_102 "))
+                    {
+                        commandName = "1_102 Check Button Press ";
+                    }
+                    byte[] button = new byte[4];
+                    Array.Copy(subsubEntry, subsubEntry.Length - 4, button, 0, 4);
+                    InputCode flags = (InputCode)BitConverter.ToUInt32(button, 0);
+                    string Button = flags.ToString("F");
+                    if (IsDebug) { newName = "Debug "; }
+                    return newName + commandName + "(" + Button + ")";
                 }
                 else
                 {
