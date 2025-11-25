@@ -359,8 +359,63 @@ namespace MarvelData
                 IsDebug = true;
             }
             string newName = "";
+            //im never going to implement this am i
+            switch (cmdName)
+            {
+                case string x when cmdName.StartsWith("0_00"):
+                    if (subsubEntry.Length == 92)
+                    {
+                        string commandName = "0_00 Comment: ";
+                        byte[] V1 = new byte[64];
+                        Array.Copy(subsubEntry, subsubEntry.Length - 68, V1, 0, 64);
+                        string S1 = Encoding.UTF8.GetString(V1, 0, 64).Replace("\0", "");
+                        if (IsDebug) { newName = "Debug "; }
+                        return newName + commandName + S1;
+                    }
+                    else
+                    {
+                        return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
+                    }
+                 /*   
+                case string x when cmdName.StartsWith("0_01"):
+                    if (subsubEntry.Length == 92)
+                    {
+                        string commandName = "0_00 Comment: ";
+                        byte[] V1 = new byte[64];
+                        Array.Copy(subsubEntry, subsubEntry.Length - 68, V1, 0, 64);
+                        string S1 = Encoding.UTF8.GetString(V1, 0, 64).Replace("\0", "");
+                        if (IsDebug) { newName = "Debug "; }
+                        return newName + commandName + S1;
+                    }
+                    else
+                    {
+                        return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
+                    }*/
 
-            if (cmdName.Contains("0_01 ") || cmdName.Contains("0_02 ") || cmdName.Contains("0_04 ") || cmdName.Contains("0_1C ")) //GotoIf
+                //case string x when cmdName.StartsWith("0_02"):
+
+
+
+            }
+            
+
+            /*if (cmdName.Contains("0_00 ")) //Comment Block
+            {
+                if (subsubEntry.Length == 92)
+                {
+                    string commandName = "0_00 Comment: ";
+                    byte[] V1 = new byte[64];
+                    Array.Copy(subsubEntry, subsubEntry.Length - 68, V1, 0, 64);
+                    string S1 = Encoding.UTF8.GetString(V1, 0, 64).Replace("\0", "");
+                    if (IsDebug) { newName = "Debug "; }
+                    return newName + commandName + S1;
+                }
+                else
+                {
+                    return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
+                }
+            }
+            else*/ if (cmdName.Contains("0_01 ") || cmdName.Contains("0_02 ") || cmdName.Contains("0_04 ") || cmdName.Contains("0_1C ")) //GotoIf
             {
 
                 byte[] V1 = new byte[4];
@@ -379,7 +434,7 @@ namespace MarvelData
 
                 }
 
-                else if (cmdName.Contains("0_01 ") && subSize == 40)
+                if (cmdName.Contains("0_01 ") && subSize == 40)
                 {
                     string GoTo = BitConverter.ToInt32(V3, 0).ToString("X");
                     string vInt = BitConverter.ToInt32(V1, 0).ToString();
@@ -565,7 +620,7 @@ namespace MarvelData
                     }
                     else
                     {
-                        return newName + commandName + "(ERRh)";
+                        return newName + commandName + "NaN";
                     }
 
                     return newName + commandName + "(" + S1 + "h)";
@@ -575,8 +630,23 @@ namespace MarvelData
                     return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
                 }
             }
+            else if (cmdName.Contains("1_0B")) //Goto frame on landing
+            {
+                if (subsubEntry.Length == 24)
+                {
+                    string commandName = "1_0B Goto Frame ";
+                    byte[] V1 = new byte[4];
+                    Array.Copy(subsubEntry, subsubEntry.Length - 4, V1, 0, 4);
+                    string S1 = BitConverter.ToInt32(V1, 0).ToString("D");
 
-
+                    if (IsDebug) { newName = "Debug "; }
+                    return newName + commandName + S1 + " On Landing";
+                }
+                else
+                {
+                    return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
+                }
+            }
 
             else if (cmdName.Contains("1_2F") || cmdName.Contains("1_30") || cmdName.Contains("1_31") || cmdName.Contains("1_32") || cmdName.Contains("1_33") || cmdName.Contains("1_34"))  //AirGroundState
             {
@@ -620,7 +690,47 @@ namespace MarvelData
                     return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
                 }
             }
-
+            else if (cmdName.Contains("1_35") || cmdName.Contains("1_36") || cmdName.Contains("1_37") || cmdName.Contains("1_38") || cmdName.Contains("1_39") || cmdName.Contains("1_3A"))
+            {
+                string commandName = "";
+                if (cmdName.Contains("1_35 "))
+                {
+                    commandName = "1_35 Start Modifier";
+                }
+                else if (cmdName.Contains("1_36 "))
+                {
+                    commandName = "1_36 Start Modifier";
+                }
+                else if (cmdName.Contains("1_37 "))
+                {
+                    commandName = "1_37 End Modifier";
+                }
+                else if (cmdName.Contains("1_38 "))
+                {
+                    commandName = "1_38 End Modifier";
+                }
+                else if (cmdName.Contains("1_39 "))
+                {
+                    commandName = "1_39 Check Enabled Modifier";
+                }
+                else if (cmdName.Contains("1_3A "))
+                {
+                    commandName = "1_3A Check Disabled Modifier";
+                }
+                if (subsubEntry.Length == 24)
+                {
+                    byte[] last4Bytes = new byte[4];
+                    Array.Copy(subsubEntry, subsubEntry.Length - 4, last4Bytes, 0, 4);
+                    AnmFlagsB flags = (AnmFlagsB)BitConverter.ToUInt32(last4Bytes, 0);
+                    string flagNames = flags.ToString("F");
+                    if (IsDebug) { newName = "Debug "; }
+                    return newName + commandName + " (" + flagNames + ")";
+                }
+                else
+                {
+                    return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
+                }
+            }
             //FlagsA
             else if (cmdName.Contains("1_3B") || cmdName.Contains("1_3C") || cmdName.Contains("1_3D") || cmdName.Contains("1_3E") || cmdName.Contains("1_3F") || cmdName.Contains("1_40"))
             {
@@ -653,7 +763,7 @@ namespace MarvelData
                 {
                     byte[] last4Bytes = new byte[4];
                     Array.Copy(subsubEntry, subsubEntry.Length - 4, last4Bytes, 0, 4);
-                    AnmFlagsA flags = (AnmFlagsA)BitConverter.ToUInt32(last4Bytes, 0);
+                    AnmFlagsC flags = (AnmFlagsC)BitConverter.ToUInt32(last4Bytes, 0);
                     string flagNames = flags.ToString("F");
                     if (IsDebug) { newName = "Debug "; }
                     return newName + commandName + " (" + flagNames + ")";
@@ -663,6 +773,237 @@ namespace MarvelData
                     return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
                 }
             }
+            else if (cmdName.Contains("1_41") || cmdName.Contains("1_42") || cmdName.Contains("1_43") || cmdName.Contains("1_44") || cmdName.Contains("1_45") || cmdName.Contains("1_46"))
+            {
+                string commandName = "";
+                if (cmdName.Contains("1_41 "))
+                {
+                    commandName = "1_41 Start Properties";
+                }
+                else if (cmdName.Contains("1_42 "))
+                {
+                    commandName = "1_42 Start Properties";
+                }
+                else if (cmdName.Contains("1_43 "))
+                {
+                    commandName = "1_43 End Properties";
+                }
+                else if (cmdName.Contains("1_44 "))
+                {
+                    commandName = "1_44 End Properties";
+                }
+                else if (cmdName.Contains("1_45 "))
+                {
+                    commandName = "1_45 Check Enabled Properties";
+                }
+                else if (cmdName.Contains("1_46 "))
+                {
+                    commandName = "1_46 Check Disabled Properties";
+                }
+                if (subsubEntry.Length == 24)
+                {
+                    byte[] last4Bytes = new byte[4];
+                    Array.Copy(subsubEntry, subsubEntry.Length - 4, last4Bytes, 0, 4);
+                    AnmFlagsD flags = (AnmFlagsD)BitConverter.ToUInt32(last4Bytes, 0);
+                    string flagNames = flags.ToString("F");
+                    if (IsDebug) { newName = "Debug "; }
+                    return newName + commandName + " (" + flagNames + ")";
+                }
+                else
+                {
+                    return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
+                }
+            }
+
+            else if (cmdName.Contains("1_47") || cmdName.Contains("1_48") || cmdName.Contains("1_49") || cmdName.Contains("1_4A") || cmdName.Contains("1_4B") || cmdName.Contains("1_4C"))
+            {
+                string commandName = "";
+                if (cmdName.Contains("1_47 "))
+                {
+                    commandName = "1_47 Start State";
+                }
+                else if (cmdName.Contains("1_48 "))
+                {
+                    commandName = "1_48 Start State";
+                }
+                else if (cmdName.Contains("1_49 "))
+                {
+                    commandName = "1_49 End State";
+                }
+                else if (cmdName.Contains("1_4A "))
+                {
+                    commandName = "1_4A End State";
+                }
+                else if (cmdName.Contains("1_4B "))
+                {
+                    commandName = "1_4B Check Enabled State";
+                }
+                else if (cmdName.Contains("1_4C "))
+                {
+                    commandName = "1_4C Check Disabled State";
+                }
+                if (subsubEntry.Length == 24)
+                {
+                    byte[] last4Bytes = new byte[4];
+                    Array.Copy(subsubEntry, subsubEntry.Length - 4, last4Bytes, 0, 4);
+                    AnmFlagsE flags = (AnmFlagsE)BitConverter.ToUInt32(last4Bytes, 0);
+                    string flagNames = flags.ToString("F");
+                    if (IsDebug) { newName = "Debug "; }
+                    return newName + commandName + " (" + flagNames + ")";
+                }
+                else
+                {
+                    return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
+                }
+            }
+            else if (cmdName.Contains("1_4D") || cmdName.Contains("1_4E") || cmdName.Contains("1_4F") || cmdName.Contains("1_50") || cmdName.Contains("1_51") || cmdName.Contains("1_52"))
+            {
+                string commandName = "";
+                if (cmdName.Contains("1_4D "))
+                {
+                    commandName = "1_4D Enable Properties";
+                }
+                else if (cmdName.Contains("1_4E "))
+                {
+                    commandName = "1_4E Enable Properties";
+                }
+                else if (cmdName.Contains("1_4F "))
+                {
+                    commandName = "1_4F Disable Properties";
+                }
+                else if (cmdName.Contains("1_50 "))
+                {
+                    commandName = "1_50 Disable Properties";
+                }
+                else if (cmdName.Contains("1_51 "))
+                {
+                    commandName = "1_51 Check Enabled Properties";
+                }
+                else if (cmdName.Contains("1_52 "))
+                {
+                    commandName = "1_52 Check Disabled Properties";
+                }
+                if (subsubEntry.Length == 24)
+                {
+                    byte[] last4Bytes = new byte[4];
+                    Array.Copy(subsubEntry, subsubEntry.Length - 4, last4Bytes, 0, 4);
+                    AnmFlagsF flags = (AnmFlagsF)BitConverter.ToUInt32(last4Bytes, 0);
+                    string flagNames = flags.ToString("F");
+                    if (IsDebug) { newName = "Debug "; }
+                    return newName + commandName + " (" + flagNames + ")";
+                }
+                else
+                {
+                    return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
+                }
+            }
+            else if (cmdName.Contains("1_53") || cmdName.Contains("1_54") || cmdName.Contains("1_55") || cmdName.Contains("1_56") || cmdName.Contains("1_57") || cmdName.Contains("1_58"))
+            {
+                string commandName = "";
+                if (cmdName.Contains("1_53 "))
+                {
+                    commandName = "1_53 Enable Unk Properties";
+                }
+                else if (cmdName.Contains("1_54 "))
+                {
+                    commandName = "1_54 Enable Unk Properties";
+                }
+                else if (cmdName.Contains("1_55 "))
+                {
+                    commandName = "1_55 Disable Unk Properties";
+                }
+                else if (cmdName.Contains("1_56 "))
+                {
+                    commandName = "1_56 Disable Unk Properties";
+                }
+                else if (cmdName.Contains("1_57 "))
+                {
+                    commandName = "1_57 Check Enabled Unk Properties";
+                }
+                else if (cmdName.Contains("1_58 "))
+                {
+                    commandName = "1_58 Check Disabled Unk Properties";
+                }
+                if (subsubEntry.Length == 24)
+                {
+                    byte[] last4Bytes = new byte[4];
+                    Array.Copy(subsubEntry, subsubEntry.Length - 4, last4Bytes, 0, 4);
+                    AnmFlagsG flags = (AnmFlagsG)BitConverter.ToUInt32(last4Bytes, 0);
+                    string flagNames = flags.ToString("F");
+                    if (IsDebug) { newName = "Debug "; }
+                    return newName + commandName + " (" + flagNames + ")";
+                }
+                else
+                {
+                    return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
+                }
+            }
+
+            else if (cmdName.Contains("1_59") || cmdName.Contains("1_5A") || cmdName.Contains("1_5B") || cmdName.Contains("1_5C") || cmdName.Contains("1_5D") || cmdName.Contains("1_5E"))
+            {
+                string commandName = "";
+                if (cmdName.Contains("1_59 "))
+                {
+                    commandName = "1_59 Enable Class Properties";
+                }
+                else if (cmdName.Contains("1_5A "))
+                {
+                    commandName = "1_5A Enable Class Properties";
+                }
+                else if (cmdName.Contains("1_5B "))
+                {
+                    commandName = "1_5B Disable Class Properties";
+                }
+                else if (cmdName.Contains("1_5C "))
+                {
+                    commandName = "1_5C Disable Class Properties";
+                }
+                else if (cmdName.Contains("1_5D "))
+                {
+                    commandName = "1_5D Check Enabled Class Properties";
+                }
+                else if (cmdName.Contains("1_5E "))
+                {
+                    commandName = "1_5E Check Disabled Class Properties";
+                }
+                if (subsubEntry.Length == 24)
+                {
+                    byte[] last4Bytes = new byte[4];
+                    Array.Copy(subsubEntry, subsubEntry.Length - 4, last4Bytes, 0, 4);
+                    AnmFlagsH flags = (AnmFlagsH)BitConverter.ToUInt32(last4Bytes, 0);
+                    string flagNames = flags.ToString("F");
+                    if (IsDebug) { newName = "Debug "; }
+                    return newName + commandName + " (" + flagNames + ")";
+                }
+                else
+                {
+                    return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
+                }
+            }
+
+            else if (cmdName.Contains("1_8B ")) //Screen Shake
+            {
+                if (subsubEntry.Length == 40)
+                {
+                    string commandName = "1_8B Armor ";
+                    byte[] V1 = new byte[4];
+                    byte[] V2 = new byte[4];
+                    byte[] V3 = new byte[4];
+                    Array.Copy(subsubEntry, subsubEntry.Length - 16, V1, 0, 4);
+                    Array.Copy(subsubEntry, subsubEntry.Length - 12, V2, 0, 4);
+                    Array.Copy(subsubEntry, subsubEntry.Length - 8, V3, 0, 4);
+                    string S1 = BitConverter.ToInt32(V1, 0).ToString("D");
+                    string S2 = BitConverter.ToInt32(V2, 0).ToString("D");
+                    string S3 = BitConverter.ToSingle(V3, 0).ToString("P");
+                    if (IsDebug) { newName = "Debug "; }
+                    return newName + commandName + "(" + S1 + " Frames, " + S2 + " Hits, " + S3 + " Damage)";
+                }
+                else
+                {
+                    return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
+                }
+            }
+
 
             if (cmdName.Contains("1_DB Add/Subtract Meter"))
             {
@@ -720,6 +1061,31 @@ namespace MarvelData
                     return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
                 }
             }
+
+            else if (cmdName.Contains("1_106 ")) //Character Class Commands
+            {
+                if (subsubEntry.Length == 40)
+                {
+                    string commandName = "1_106 Char Specific ";
+                    byte[] V1 = new byte[4];
+                    byte[] V2 = new byte[4];
+                    byte[] V3 = new byte[4];
+                    Array.Copy(subsubEntry, subsubEntry.Length - 12, V1, 0, 4);
+                    Array.Copy(subsubEntry, subsubEntry.Length - 8, V2, 0, 4);
+                    Array.Copy(subsubEntry, subsubEntry.Length - 4, V3, 0, 4);
+                    string S1 = BitConverter.ToInt32(V1, 0).ToString("D");
+                    string S2 = BitConverter.ToInt32(V2, 0).ToString("D");
+                    string S3 = BitConverter.ToSingle(V3, 0).ToString("P");
+                    if (IsDebug) { newName = "Debug "; }
+                    return newName + commandName + "(" + S1 + ", " + S2 + ", " + S3 + ")";
+                }
+                else
+                {
+                    return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
+                }
+            }
+
+
 
             else if (cmdName.Contains("3_30 ")) //Spawn Projectile
             {
@@ -885,12 +1251,28 @@ namespace MarvelData
                     return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
                 }
             }
-
+            else if (cmdName.Contains("3_34 ")) //Screen Shake
+            {
+                if (subsubEntry.Length == 32)
+                {
+                    string commandName = "3_34 Delay Projectile Spawn ";
+                    byte[] V1 = new byte[4];
+                    Array.Copy(subsubEntry, subsubEntry.Length - 8, V1, 0, 4);
+                    string S1 = BitConverter.ToSingle(V1, 0).ToString();
+                    if (IsDebug) { newName = "Debug "; }
+                    return newName + commandName + "(" + S1 + " Frames)";
+                }
+                else
+                {
+                    return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
+                }
+            }
             else
             {
 
                 return cmdName;
             }
         }
+
     }
 }

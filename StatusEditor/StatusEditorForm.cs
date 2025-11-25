@@ -1119,7 +1119,25 @@ namespace StatusEditor
             {
                 return;
             }
-            tablefile.table[animBox.SelectedIndex].name = shotNameTextBox.Text;
+            string s = shotNameTextBox.Text;
+            if (shotNameTextBox.Text.Length > 64)
+            {
+                MessageBox.Show("Name size reads: " + shotNameTextBox.Text.Length
+                                + Environment.NewLine + "Automatically shortening to 64."
+                                , "Excess Character Count", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                /*
+                int i = (int)shotNameTextBox.Text.Length - 1;
+                while (i >= 0x40)
+                {
+                    shotNameTextBox.Text.Remove(i);
+                    i--;
+                }
+                */
+                s = shotNameTextBox.Text.Remove(64);
+            }
+
+            tablefile.table[animBox.SelectedIndex].name = s;
+            RefreshAnimBox();
             RefreshData();
         }
 
@@ -1452,15 +1470,21 @@ namespace StatusEditor
             else if (tag.Contains("projectileID"))
                 AddTags(typeof(ProjectileID), true);
             else if (tag.Contains("cancelFlags"))
-                AddTags(typeof(CancelFlags), true);
+                AddTags(typeof(AnmFlagsB), true);
             else if (tag.Contains("weaponID"))
                 AddTags(typeof(WeaponID), false);
             else if (tag.Contains("cancelHierarchy"))
                 AddTags(typeof(Hierarchy), false);
             else if (tag.Contains("effectType"))
                 AddTags(typeof(EffectDirection), true);
-            else if (tag.Contains("AirGroundState"))
+            else if (tag.Contains("AirGroundState") || tag.Contains("RestrictedState"))
                 AddTags(typeof(AirGroundState), true);
+            else if (tag.Contains("jumpLandSFX") || tag.Contains("damageSFXOnHit") || tag.Contains("blockSFXOnHit"))
+                AddTags(typeof(DamageFlags), false);
+            else if (tag.Contains("ChainFlags"))
+                AddTags(typeof(ChainFlags), true);
+            else if (tag.Contains("InteractionRules"))
+                AddTags(typeof(ShotFlagsD), true);
 
             else
             {
@@ -1605,6 +1629,7 @@ namespace StatusEditor
             {
                 shotNameTextBox.BackColor = Color.White;
             }
+
             return bStatus;
         }
 

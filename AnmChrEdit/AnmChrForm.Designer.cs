@@ -91,6 +91,8 @@ namespace AnmChrEdit
             this.hex8ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hex16ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tutorialFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.experimentalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.frameDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.animBox = new System.Windows.Forms.ListBox();
@@ -205,7 +207,8 @@ namespace AnmChrEdit
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.optionsToolStripMenuItem});
+            this.optionsToolStripMenuItem,
+            this.experimentalToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 2, 0, 0);
@@ -273,7 +276,7 @@ namespace AnmChrEdit
             this.disableCommandBlockToolStripMenuItem1,
             this.pasteCommandBlockToolStripMenuItem1});
             this.commandBlockToolStripMenuItem.Name = "commandBlockToolStripMenuItem";
-            this.commandBlockToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.commandBlockToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.commandBlockToolStripMenuItem.Text = "Command Block";
             // 
             // copyCommandBlockToolStripMenuItem1
@@ -315,7 +318,7 @@ namespace AnmChrEdit
             this.deleteCommandsToolStripMenuItem,
             this.pasteCommandsToolStripMenuItem});
             this.commandsToolStripMenuItem.Name = "commandsToolStripMenuItem";
-            this.commandsToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.commandsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.commandsToolStripMenuItem.Text = "Command";
             // 
             // copyCommandsToolStripMenuItem
@@ -349,7 +352,7 @@ namespace AnmChrEdit
             this.hex8ToolStripMenuItem,
             this.hex16ToolStripMenuItem});
             this.formatDisplayToolStripMenuItem.Name = "formatDisplayToolStripMenuItem";
-            this.formatDisplayToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.formatDisplayToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.formatDisplayToolStripMenuItem.Text = "Format Display";
             // 
             // unsetToolStripMenuItem
@@ -379,9 +382,25 @@ namespace AnmChrEdit
             // tutorialFilesToolStripMenuItem
             // 
             this.tutorialFilesToolStripMenuItem.Name = "tutorialFilesToolStripMenuItem";
-            this.tutorialFilesToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.tutorialFilesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.tutorialFilesToolStripMenuItem.Text = "Tutorial Files";
             this.tutorialFilesToolStripMenuItem.Click += new System.EventHandler(this.testImgButton_Click);
+            // 
+            // experimentalToolStripMenuItem
+            // 
+            this.experimentalToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.frameDataToolStripMenuItem});
+            this.experimentalToolStripMenuItem.Enabled = false;
+            this.experimentalToolStripMenuItem.Name = "experimentalToolStripMenuItem";
+            this.experimentalToolStripMenuItem.Size = new System.Drawing.Size(88, 22);
+            this.experimentalToolStripMenuItem.Text = "Experimental";
+            this.experimentalToolStripMenuItem.Visible = false;
+            // 
+            // frameDataToolStripMenuItem
+            // 
+            this.frameDataToolStripMenuItem.Name = "frameDataToolStripMenuItem";
+            this.frameDataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.frameDataToolStripMenuItem.Text = "Frame Data";
             // 
             // splitContainer2
             // 
@@ -1074,6 +1093,9 @@ namespace AnmChrEdit
         private ToolStripMenuItem offSetToolStripMenu;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem setCommandBlockFramesToolStripMenuItem;
+        //nova was here
+        private ToolStripMenuItem experimentalToolStripMenuItem;
+        private ToolStripMenuItem frameDataToolStripMenuItem;
     }
 
 }

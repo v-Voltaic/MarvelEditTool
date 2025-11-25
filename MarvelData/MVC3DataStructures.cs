@@ -166,7 +166,7 @@ namespace MarvelData {
             [FieldOffset(640)] public int unk2E4;
             [FieldOffset(644)] public int unk2E8;
             [FieldOffset(648)] public int unk2EC;
-            [FieldOffset(652)] public int canBeNullified;
+            [FieldOffset(652)] public ShotFlagsD InteractionRules;
             [FieldOffset(656)] public int unk2F4;
             [FieldOffset(660)] public int unk2F8;
             [FieldOffset(664)] public int unk2FC;
@@ -341,7 +341,7 @@ namespace MarvelData {
          public int unk2E4;
          public int unk2E8;
          public int unk2EC;
-         public int canBeNullified;
+         public ShotFlagsD InteractionRules;
          public int unk2F4;
          public int unk2F8;
          public int unk2FC;
@@ -363,7 +363,7 @@ namespace MarvelData {
         public float XSpeed;
         public float XAccel;
         public float XMaxSpeedAccelUnk;
-        public float beamDuration;
+        public float BeamDistance;
         public float YSpeed;
         public float YAccel;
         public float YMaxSpeedAccelUnk;
@@ -503,19 +503,19 @@ namespace MarvelData {
         public int unk2B4;
         public int EffectSubEntryA;
         public int EffectSubEntryB;
-        public int unk2C0;
-        public int unk2C4;
-        public float HardCodedProperties1;
-        public float HardCodedProperties2;
-        public float HardCodedProperties3;
-        public float unk2D4;
+        public int HardCodedProperties3;
+        public int HardCodedProperties4;
+        public float HardCodedProperties5;
+        public float HardCodedProperties6;
+        public float HardCodedProperties7;
+        public float HardCodedProperties8;
         public int unk2D8;
         public int unk2DC;
         public int friendlyFire;
         public int unk2E4;
         public int unk2E8;
         public int unk2EC;
-        public int canBeNullified;
+        public ShotFlagsD InteractionRules;
         public int unk2F4;
         public int unk2F8;
         public int unk2FC;
@@ -613,7 +613,7 @@ namespace MarvelData {
             despawnOwnerHitOrBlock = 0x00000010,
             NoGroundCollision = 0x00000020,
             Unk0x40 = 0x00000040,
-            Unk0x80 = 0x00000080,
+            IgnoreFreezeFrames = 0x00000080,
             DisableATI = 0x00000100,
             DespawnOnOwnerTagOut = 0x00000200,
             Unk0x0400 = 0x00000400,
@@ -678,6 +678,43 @@ namespace MarvelData {
             Unk0x40000000 = 0x40000000,
             Unk0x80000000 = 0x80000000
         }
+    [Flags]
+    public enum ShotFlagsD : uint
+    {
+        None = 0,
+        CanBlockOpponent = 0x00000001,
+        CanHitOpponent = 0x00000002,
+        Unk0x04 = 0x00000004,
+        CanHitProjectiles = 0x00000008,
+        Unk0x10 = 0x00000010,
+        Unk0x20 = 0x00000020,
+        Unk0x40 = 0x00000040,
+        Unk0x80 = 0x00000080,
+        Unk0x0100 = 0x00000100,
+        Unk0x0200 = 0x00000200,
+        Unk0x0400 = 0x00000400,
+        CantHitOwner = 0x00000800,
+        OwnerCanHitUnk1 = 0x00001000,
+        Unk0x2000 = 0x00002000,
+        Unk0x4000 = 0x00004000,
+        Unk0x8000 = 0x00008000,
+        Unk0x010000 = 0x00010000,
+        Unk0x020000 = 0x00020000,
+        Unk0x040000 = 0x00040000,
+        OwnerCanHitUnk2 = 0x00080000,
+        Unk0x100000 = 0x00100000,
+        Unk0x200000 = 0x00200000,
+        Unk0x400000 = 0x00400000,
+        Unk0x800000 = 0x00800000,
+        Unkx01000000 = 0x01000000,
+        Unk0x02000000 = 0x02000000,
+        Unk0x04000000 = 0x04000000,
+        Unk0x08000000 = 0x08000000,
+        Unk0x10000000 = 0x10000000,
+        Unk0x20000000 = 0x20000000,
+        Unk0x40000000 = 0x40000000,
+        Unk0x80000000 = 0x80000000
+    }
     public enum ProjectileID : uint
     {
         //Amaterasu
@@ -2165,11 +2202,11 @@ namespace MarvelData {
             public float XF1Duration;
             public int unkE4;
             public int unkE8;
-            public int unkEC;
-            public int unkF0;
+            public float XF1MeterSpendOnActivation;
+            public float XF1PassiveMeterGain;
             public float XF1MeterGain;
             public float XF1DmgTaken;
-            public int unkFC;
+            public float XF1DurationAdjustmentWhenHit;
             public int XF2YellowHealthRegen;
             public int XF2ChipDamageOn;
             public float XF2Damage;
@@ -2177,11 +2214,11 @@ namespace MarvelData {
             public float XF2Duration;
             public int unk114;
             public int unk118;
-            public int unk11C;
-            public int unk120;
+            public float XF2MeterSpendOnActivation;
+            public float XF2PassiveMeterGain;
             public float XF2MeterGain;
             public float XF2DmgTaken;
-            public int unk12C;
+            public float XF2DurationAdjustmentWhenHit;
             public int XF3YellowHealthRegen;
             public int XF3ChipDamageOn;
             public float XF3Damage;
@@ -2189,33 +2226,33 @@ namespace MarvelData {
             public float XF3Duration;
             public int unk144;
             public int unk148;
-            public int unk150;
+            public float XF3MeterSpendOnActivation;
             public float XF3PassiveMeterGain;
             public float XF3MeterGain;
             public float XF3DmgTaken;
-            public int unk160;
+            public float XF3DurationAdjustmentWhenHit;
             public int frankLevel2XP;
             public int frankLevel3XP;
             public int frankLevel4XP;
             public int frankLevel5XP;
-            public int unk174;
+            public float unk174;
             public float unk178;
             public float unk17C;
-            public int unk180;
+            public float unk180;
             public int unk184;
             public int unk188;
-            public float LandingDustCloudXScaling;
+            public float LandingDustCloudZScaling;
             public float LandingDustCloudYScaling;
+            public float LandingDustCloudXScaling;
             public float JumpAndKnockdownEffectScaling;
-            public float unk198;
             public int unk19C;
-            public int unk1A0;
+            public float unk1A0;
             public int unk1A4;
             public int unk1A8;
             public int unk1AC;
-            public int damageSFXOnHit;
-            public int blockSFXOnHit;
-            public int jumpLandSFX;
+            public DamageFlags damageSFXOnHit;
+            public DamageFlags blockSFXOnHit;
+            public DamageFlags jumpLandSFX;
             public float unk1BC;
             public float unk1C0;
             public float unk1C4;
@@ -2236,22 +2273,22 @@ namespace MarvelData {
             public float unk200;
             public float unk204;
             public float unk208;
-            public int unk20C;
-            public int unk210;
-            public float unk214;
-            public float unk218;
-            public float unk21C;
-            public float unk220;
-            public float unk224;
-            public float unk228;
-            public float unk22C;
-            public float unk230;
-            public float unk234;
-            public float unk238;
-            public float unk23C;
-            public float unk240;
-            public float unk244;
-            public float unk248;
+            public int HeadTrackBone1;
+            public int HeadTrackBone2;
+            public float HeadTrackingUnk1;
+            public float HeadTrackingUnk2;
+            public float HeadTrackingUnk3;
+            public float HeadTrackingUnk4;
+            public float HeadTrackingUnk5;
+            public float HeadTrackingUnk6;
+            public float HeadTrackingRange;
+            public float CrouchHeadTrackingUnk1;
+            public float CrouchHeadTrackingUnk2;
+            public float CrouchHeadTrackingUnk3;
+            public float CrouchHeadTrackingUnk4;
+            public float CrouchHeadTrackingUnk5;
+            public float CrouchHeadTrackingUnk6;
+            public float CrouchHeadTrackingRange;
             public float unk24C;
             public int FaceGroup1;
             public int FaceGroup2;
@@ -2279,13 +2316,13 @@ namespace MarvelData {
             public float unk2AC;
             public float unk2B0;
             public float unk2B4;
-            public int unk2B8;
-            public int unk2BC;
-            public int unk2C0;
-            public int unk2C4;
-            public int unk2C8;
-            public int unk2CC;
-            public int unk2D0;
+            public int WinQuoteVsCharacterID1;
+            public int WinQuoteVsCharacterID2;
+            public int WinQuoteVsCharacterID3;
+            public int WinQuoteVsCharacterID4;
+            public int WinQuoteVsCharacterID5;
+            public int WinQuoteVsCharacterID6;
+            public int WinQuoteVsCharacterID7;
             public int unk2D4;
             public int unk2D8;
             public int unk2DC;
@@ -2319,7 +2356,16 @@ namespace MarvelData {
             public int unk34C;
             public int unk350;
         }
-        [Flags]
+
+    public enum DamageFlags : int
+    {
+        Default = 0,
+        Metal = 1,
+        Heavy = 2
+
+
+    }
+    [Flags]
         public enum TrapTransition : uint
         {
             None = 0,
@@ -2329,8 +2375,8 @@ namespace MarvelData {
             Unk0x08 = 0x00000008,
             HitBlockorDestroyed = 0x00000010,
             GroundImpact = 0x00000020,
-            Unk0x40 = 0x00000040,
-            Unk0x80 = 0x00000080,
+            DontTransition = 0x00000040,
+            SpawnAtSelf = 0x00000080,
             Unk0x0100 = 0x00000100,
             WhenOwnerHit = 0x00000200,
             Unk0x0400 = 0x00000400,
@@ -2429,7 +2475,7 @@ namespace MarvelData {
             public int unk00C;
             public int unk010;
             public int multiHit;
-            public int unk018;
+            public int HitsUntilCancel;
             public int multiHitFrequency;
             public int unk020;
             public int HitsparkFrequency;
@@ -2454,27 +2500,27 @@ namespace MarvelData {
             public int unk070;
             public float MeterGain;
             public float MeterGainOnHit;
-            public int OppMeterGain;
-            public int meterSteal;
+            public int OppMeterGainOnHit;
+            public int meterSteal; //0x80
             public Durability projectileDestruction;
-            public int hiddenStunUnk;
+            public float StunDamage;
             public int AddedGroundHitstun;
-            public int AddedCounterhitStun;
+            public int AddedCounterhitStun; //0x90
             public int AddedBlockstun;
             public int AddedHardKDTime;
             public float GroundHitPushbackWallBounceXSpeed;
-            public float GroundHitPushbackWallBounceXAccel;
+            public float GroundHitPushbackWallBounceXAccel; //0xA0
             public float BlockPushbackXSpeed;
             public float BlockPushbackXAccel;
             public float SelfYForceAgainstAirOpp;
-            public float SelfYDecelAgainstAirOpp;
+            public float SelfYDecelAgainstAirOpp; //0xB0
             public float SJSelfYForceAgainstAirOpp;
             public float SJSelfYDecelAgainstAirOpp;
             public float GroundWallBounceYSpeed;
-            public float GroundWallBounceYAccel;
+            public float GroundWallBounceYAccel; //0xC0
             public int hitstop;
             public int HitStopDelay;
-            public int RemoveAllHealthAndMeterTest;
+            public float RemoveAllHealthAndMeterTest;
             public int sjCancelDelay;
             public int juggleHeight;
             public int JuggleGravityDelay;
@@ -2490,7 +2536,7 @@ namespace MarvelData {
             public int PlayerCmdSPAtkIndexOnHit;
             public int EnemyCmdSPAtkClassOnHit;
             public int EnemyCmdSPAtkIndexOnHit;
-            public int AmmyThrowModifier;
+            public float AmmyUnk;
             public int AmmyAnmchrEntryOnHit;
             public int AmmyAnmtdownEntryOnHit;
             public HitEffect HitEffect;
@@ -2515,12 +2561,12 @@ namespace MarvelData {
             public float EffectRotation1;
             public float EffectRotation2;
             public float EffectRotation3;
-            public int EffectRandomRotationDisplacement;
+            public float EffectRandomRotationDisplacement;
             public int unk174;
             public int IDReference2;
             public int FramesToIDReference2;
-            public int MultiCharHitsToIDRef2;
             public int HitsToIDReference2;
+            public int SingleCharHitsToIDReference2;
             public int unk188;
         }
 
@@ -2536,7 +2582,7 @@ namespace MarvelData {
             Unk0x20 = 0x00000020,
             CantHitAir = 0x00000040,
             NoPushback = 0x00000080,
-            Unk0x100 = 0x00000100,
+            AutoCorrectJuggleUnk1 = 0x00000100,
             AlwaysApplySelfYPhysics = 0x00000200,
             KeepMomentumY = 0x00000400,
             FixedHitstunDuration = 0x00000800,
@@ -2559,7 +2605,7 @@ namespace MarvelData {
             OTGOnly = 0x10000000,
             NegatePushBlock = 0x20000000,
             JuggleInvul = 0x40000000,
-            Unk0x80000000 = 0x80000000
+            AutoCorrectJuggleUnk2 = 0x80000000
         }
 
         [Flags]
@@ -2571,11 +2617,11 @@ namespace MarvelData {
             ProjectileHitboxJuggleAway = 0x00000004,
             NeverCounterhit = 0x00000008,
             EnableTransition = 0x00000010,
-            Unk0x20 = 0x00000020,
+            Counter = 0x00000020,
             ChipDamage = 0x00000040,
             Unblockable = 0x00000080,
             ForceStandingState = 0x00000100,
-            NoHitboxUnk = 0x00000200,
+            ProjectileInteractOnly = 0x00000200,
             NoHyperMeterBuild = 0x00000400,
             NoComboCounter = 0x00000800,
             UnscaledDamage = 0x00001000,
@@ -2615,10 +2661,10 @@ namespace MarvelData {
             Unk0x200 = 0x00000200,
             Unk0x400 = 0x00000400,
             CounterProjectile = 0x00000800,
-            CounterAllPhysical = 0x00001000,
-            CounterLows = 0x00002000,
-            CounterHighMid = 0x00004000,
-            CounterHighMidLow = 0x00008000,
+            CounterSupers = 0x00001000,
+            CounterLowOnly = 0x00002000,
+            CounterHighMidOnly = 0x00004000,
+            CounterHighMidLowOnly = 0x00008000,
             Unk0x10000 = 0x00010000,
             Unk0x20000 = 0x00020000,
             Unk0x40000 = 0x00040000,
@@ -2627,7 +2673,7 @@ namespace MarvelData {
             Unk0x200000 = 0x00200000,
             Unk0x400000 = 0x00400000,
             FirstHitDmgs = 0x00800000,
-            Unk0x1000000 = 0x01000000,
+            NoSnapOnLastCharacter = 0x01000000,
             TechTAC1 = 0x02000000,
             HitComboGrab = 0x04000000,
             Unk0x8000000 = 0x08000000,
@@ -2679,6 +2725,7 @@ namespace MarvelData {
             AlphaCounter01 = 41,
             ComicBookScreenTear = 43,
             YellowJaggedOverlay = 44,
+            GunShotTask = 45,
             GunShot = 46,
             ComicBookScreenRedBurn = 47,
             ComicBookScreenBlueBurn = 48,
@@ -2768,7 +2815,7 @@ namespace MarvelData {
             spinningJuggle = 10,
             launch = 11,
             FlyingScreenHK1 = 12,
-            flyingScreenHK2 = 13,
+            Stun = 13,
             forceGuard = 14,
             fallBack3 = 15
         }
@@ -2846,30 +2893,30 @@ namespace MarvelData {
     public enum AirGroundState : uint
     { //Flags are reversed?
         None = 0,
-        Ground = 0x00000001,
+        Standing = 0x00000001,
         Crouching = 0x00000002,
         Unk0x04 = 0x00000004,
-        Jump = 0x00000008,
+        PreJump = 0x00000008,
         SuperJump = 0x00000010,
         Airborne = 0x00000020,
         Forward = 0x00000040,
         Backwards = 0x00000080,
         Dashing = 0x00000100,
         Unk0x200 = 0x00000200,
-        TurnAroundUnk = 0x00000400,
-        NoCancel = 0x00000800,
+        TurnAround = 0x00000400,
+        Attack = 0x00000800,
         Special = 0x00001000,
         Super = 0x00002000,
-        Blocking = 0x00004000,
-        Unk0x8000 = 0x00008000,
+        Guard = 0x00004000,
+        AutoGuard = 0x00008000,
         Unk0x10000 = 0x00010000,
-        Unk0x20000 = 0x00020000,
-        Unk0x40000 = 0x00040000,
+        ChildA = 0x00020000,
+        ChildB = 0x00040000,
         Unk0x80000 = 0x00080000,
         Unk0x100000 = 0x00100000,
         Damage = 0x00200000,
         Unk0x400000 = 0x00400000,
-        Unk0x800000 = 0x00800000,
+        GroundRecovery = 0x00800000,
         Knockdown = 0x01000000,
         Unk0x02000000 = 0x02000000,
         Assist = 0x04000000,
@@ -2889,8 +2936,8 @@ namespace MarvelData {
             public InputCode inputCodeDirectionLeniency;
             public InputCode inputCodeDirection;
             public InputCode inputCodeButton;
-            public BaseActState state;
-            public int unk18;
+            public AirGroundState AirGroundState;
+            public AirGroundState RestrictedState;
             public int unk1C;
         }
 
@@ -2913,8 +2960,45 @@ namespace MarvelData {
             public int anmChrAction6;
             public int anmChrAction7;
             public int anmChrAction8;
-            public int unk40;
+            public ChainFlags ChainFlags;
         }
+    [Flags]
+    public enum ChainFlags : uint
+    {
+        None = 0,
+        Unk0x01 = 0x00000001,
+        Unk0x02 = 0x00000002,
+        Unk0x04 = 0x00000004,
+        Unk0x08 = 0x00000008,
+        NormalsChainLimit = 0x00000010,
+        Unk0x20 = 0x00000020,
+        Unk0x40 = 0x00000040,
+        Unk0x80 = 0x00000080,
+        Unk0x0100 = 0x00000100,
+        Unk0x0200 = 0x00000200,
+        Unk0x0400 = 0x00000400,
+        Unk0x0800 = 0x00000800,
+        Unk0x1000 = 0x00001000,
+        Unk0x2000 = 0x00002000,
+        Unk0x4000 = 0x00004000,
+        Unk0x8000 = 0x00008000,
+        Unk0x010000 = 0x00010000,
+        Unk0x020000 = 0x00020000,
+        Unk0x040000 = 0x00040000,
+        Unk0x080000 = 0x00080000,
+        Unk0x100000 = 0x00100000,
+        Unk0x200000 = 0x00200000,
+        Unk0x400000 = 0x00400000,
+        Unk0x800000 = 0x00800000,
+        Unkx01000000 = 0x01000000,
+        Unk0x02000000 = 0x02000000,
+        Unk0x04000000 = 0x04000000,
+        Unk0x08000000 = 0x08000000,
+        Unk0x10000000 = 0x10000000,
+        Unk0x20000000 = 0x20000000,
+        Unk0x40000000 = 0x40000000,
+        Unk0x80000000 = 0x80000000
+    }
         public enum Hierarchy
         {
         Neutral = 0,
@@ -3931,7 +4015,7 @@ namespace MarvelData {
         public struct SpatkAllowedChainChunk // 3F
         {
             public SubChunkType subChunkType; //3F
-            public CancelFlags cancelFlags;
+            public AnmFlagsB cancelFlags;
             public int unk08;
             public int unk0C;
             public int unk10;
@@ -3944,7 +4028,7 @@ namespace MarvelData {
         public struct SpatkAdvGuardUnk // 49
         {
             public SubChunkType subChunkType; //49
-            public CancelFlags cancelFlags;
+            public AnmFlagsB cancelFlags;
             public int unk08;
             public int unk0C;
             public int unk10;
@@ -4042,7 +4126,81 @@ namespace MarvelData {
             public int unk1C;
         }
     [Flags]
-    public enum AnmFlagsA : uint // Flags for 1_3C/1_3D
+    public enum AnmFlagsA : uint //DeadCharacter 1_2A-1_2E
+    {
+        None = 0,
+        Unk0x01 = 0x00000001,
+        Unk0x02 = 0x00000002,
+        Unk0x04 = 0x00000004,
+        Unk0x08 = 0x00000008,
+        Unk0x10 = 0x00000010,
+        Unk0x20 = 0x00000020,
+        Unk0x40 = 0x00000040,
+        Unk0x80 = 0x00000080,
+        Unk0x0100 = 0x00000100,
+        Unk0x0200 = 0x00000200,
+        Unk0x0400 = 0x00000400,
+        Unk0x0800 = 0x00000800,
+        Unk0x1000 = 0x00001000,
+        Unk0x2000 = 0x00002000,
+        Unk0x4000 = 0x00004000,
+        Unk0x8000 = 0x00008000,
+        Unk0x010000 = 0x00010000,
+        Unk0x020000 = 0x00020000,
+        Unk0x040000 = 0x00040000,
+        Unk0x080000 = 0x00080000,
+        Unk0x100000 = 0x00100000,
+        Unk0x200000 = 0x00200000,
+        Unk0x400000 = 0x00400000,
+        Unk0x800000 = 0x00800000,
+        Unkx01000000 = 0x01000000,
+        Unk0x02000000 = 0x02000000,
+        Unk0x04000000 = 0x04000000,
+        Unk0x08000000 = 0x08000000,
+        Unk0x10000000 = 0x10000000,
+        Unk0x20000000 = 0x20000000,
+        Unk0x40000000 = 0x40000000,
+        Unk0x80000000 = 0x80000000
+    }
+    [Flags]
+    public enum AnmFlagsB : uint //Mash or Left/Right modifier 1_35-1_3A
+    {
+        None = 0,
+        Unk0x01 = 0x00000001,
+        Whiff = 0x00000002,
+        Unk0x04 = 0x00000004,
+        Unk0x08 = 0x00000008,
+        OnHit = 0x00000010,
+        Unk0x20 = 0x00000020,
+        OnBlock = 0x00000040,
+        Unk0x80 = 0x00000080,
+        Unk0x0100 = 0x00000100,
+        Unk0x0200 = 0x00000200,
+        Unk0x0400 = 0x00000400,
+        Unk0x0800 = 0x00000800,
+        Falling = 0x00001000,
+        TouchingStageEdge = 0x00002000,
+        Unk0x4000 = 0x00004000,
+        CrossUp = 0x00008000,
+        Unk0x010000 = 0x00010000,
+        Unk0x020000 = 0x00020000,
+        Unk0x040000 = 0x00040000,
+        Unk0x080000 = 0x00080000,
+        Unk0x100000 = 0x00100000,
+        OnP2Side = 0x00200000,
+        FacingLeft = 0x00400000,
+        TouchingCameraEdge = 0x00800000,
+        Unkx01000000 = 0x01000000,
+        Unk0x02000000 = 0x02000000,
+        Unk0x04000000 = 0x04000000,
+        Unk0x08000000 = 0x08000000,
+        Unk0x10000000 = 0x10000000,
+        Unk0x20000000 = 0x20000000,
+        Unk0x40000000 = 0x40000000,
+        Unk0x80000000 = 0x80000000
+    }
+    [Flags]
+    public enum AnmFlagsC : uint // Flags for 1_3C/1_3D
     {
         None = 0,
         Unk0x01 = 0x00000001,
@@ -4078,6 +4236,195 @@ namespace MarvelData {
         Unk0x40000000 = 0x40000000,
         Unk0x80000000 = 0x80000000
     }
+    
+    [Flags]
+    public enum AnmFlagsD : uint //Special Properties 1_41-1_46
+    {
+        None = 0,
+        Unk0x01 = 0x00000001,
+        Unk0x02 = 0x00000002,
+        Unk0x04 = 0x00000004,
+        Unk0x08 = 0x00000008,
+        Unk0x10 = 0x00000010,
+        Unk0x20 = 0x00000020,
+        Unk0x40 = 0x00000040,
+        Unk0x80 = 0x00000080,
+        Unk0x0100 = 0x00000100,
+        Unk0x0200 = 0x00000200,
+        Unk0x0400 = 0x00000400,
+        Unk0x0800 = 0x00000800,
+        Unk0x1000 = 0x00001000,
+        Unk0x2000 = 0x00002000,
+        Unk0x4000 = 0x00004000,
+        Unk0x8000 = 0x00008000,
+        Unk0x010000 = 0x00010000,
+        Unk0x020000 = 0x00020000,
+        Unk0x040000 = 0x00040000,
+        Unk0x080000 = 0x00080000,
+        Unk0x100000 = 0x00100000,
+        Unk0x200000 = 0x00200000,
+        Unk0x400000 = 0x00400000,
+        Unk0x800000 = 0x00800000,
+        Unkx01000000 = 0x01000000,
+        Unk0x02000000 = 0x02000000,
+        Unk0x04000000 = 0x04000000,
+        Unk0x08000000 = 0x08000000,
+        Unk0x10000000 = 0x10000000,
+        Unk0x20000000 = 0x20000000,
+        Unk0x40000000 = 0x40000000,
+        Unk0x80000000 = 0x80000000
+    }
+
+    [Flags]
+    public enum AnmFlagsE : uint //
+    {
+        None = 0,
+        Unk0x01 = 0x00000001,
+        Unk0x02 = 0x00000002,
+        Unk0x04 = 0x00000004,
+        Unk0x08 = 0x00000008,
+        Unk0x10 = 0x00000010,
+        Unk0x20 = 0x00000020,
+        Unk0x40 = 0x00000040,
+        Unk0x80 = 0x00000080,
+        Unk0x0100 = 0x00000100,
+        Unk0x0200 = 0x00000200,
+        Unk0x0400 = 0x00000400,
+        Unk0x0800 = 0x00000800,
+        Unk0x1000 = 0x00001000,
+        Unk0x2000 = 0x00002000,
+        Unk0x4000 = 0x00004000,
+        Unk0x8000 = 0x00008000,
+        Unk0x010000 = 0x00010000,
+        Unk0x020000 = 0x00020000,
+        Unk0x040000 = 0x00040000,
+        Unk0x080000 = 0x00080000,
+        Unk0x100000 = 0x00100000,
+        Unk0x200000 = 0x00200000,
+        Unk0x400000 = 0x00400000,
+        Unk0x800000 = 0x00800000,
+        Unkx01000000 = 0x01000000,
+        Unk0x02000000 = 0x02000000,
+        Unk0x04000000 = 0x04000000,
+        Unk0x08000000 = 0x08000000,
+        Unk0x10000000 = 0x10000000,
+        Unk0x20000000 = 0x20000000,
+        Unk0x40000000 = 0x40000000,
+        Unk0x80000000 = 0x80000000
+    }
+
+    [Flags]
+    public enum AnmFlagsF : uint //Partner Properties Flags
+    {
+        None = 0,
+        ProjectileReflectUnk = 0x00000001,
+        WallBounce = 0x00000002,
+        Unk0x04 = 0x00000004,
+        THCUnk = 0x00000008,
+        HyperUnk = 0x00000010,
+        Unk0x20 = 0x00000020,
+        Unk0x40 = 0x00000040,
+        Unk0x80 = 0x00000080,
+        Unk0x0100 = 0x00000100,
+        ThrowUnk = 0x00000200,
+        LaunchedState = 0x00000400,
+        TACState = 0x00000800,
+        BreakAwayState = 0x00001000,
+        Unk0x2000 = 0x00002000,
+        AssistState = 0x00004000,
+        JumpUnk = 0x00008000,
+        Unk0x010000 = 0x00010000,
+        UseGroundBounce = 0x00020000,
+        SuperBG = 0x00040000,
+        CanStealCorner = 0x00080000,
+        FlightState = 0x00100000,
+        AirUnk = 0x00200000,
+        JumpCancellable = 0x00400000,
+        EnableDHC = 0x00800000,
+        FaceUpKD = 0x01000000,
+        FaceDownKD = 0x02000000,
+        Unk0x04000000 = 0x04000000,
+        LoopUntilTHC = 0x08000000,
+        DisableAssist = 0x10000000,
+        AttackMadeContact = 0x20000000,
+        DisableYAccel = 0x40000000,
+        AirRecoveryUnk = 0x80000000
+    }
+    [Flags]
+    public enum AnmFlagsG : uint //Unknown Properties (1_53 1_54 1_55 1_56 1_57 1_58)
+    {
+        None = 0,
+        Unk0x01 = 0x00000001,
+        Unk0x02 = 0x00000002,
+        Unk0x04 = 0x00000004,
+        Unk0x08 = 0x00000008,
+        Unk0x10 = 0x00000010,
+        Unk0x20 = 0x00000020,
+        Unk0x40 = 0x00000040,
+        Unk0x80 = 0x00000080,
+        Unk0x0100 = 0x00000100,
+        Unk0x0200 = 0x00000200,
+        Unk0x0400 = 0x00000400,
+        Unk0x0800 = 0x00000800,
+        Unk0x1000 = 0x00001000,
+        Unk0x2000 = 0x00002000,
+        Unk0x4000 = 0x00004000,
+        Unk0x8000 = 0x00008000,
+        Unk0x010000 = 0x00010000,
+        Unk0x020000 = 0x00020000,
+        Unk0x040000 = 0x00040000,
+        Unk0x080000 = 0x00080000,
+        Unk0x100000 = 0x00100000,
+        Unk0x200000 = 0x00200000,
+        Unk0x400000 = 0x00400000,
+        Unk0x800000 = 0x00800000,
+        Unkx01000000 = 0x01000000,
+        Unk0x02000000 = 0x02000000,
+        Unk0x04000000 = 0x04000000,
+        Unk0x08000000 = 0x08000000,
+        Unk0x10000000 = 0x10000000,
+        Unk0x20000000 = 0x20000000,
+        Unk0x40000000 = 0x40000000,
+        Unk0x80000000 = 0x80000000
+    }
+    [Flags]
+    public enum AnmFlagsH : uint //Character Class Properties (1_59 1_5A 1_5B 1_5C 1_5D 1_5E)
+    {
+        None = 0,
+        Unk0x01 = 0x00000001,
+        Unk0x02 = 0x00000002,
+        Unk0x04 = 0x00000004,
+        Unk0x08 = 0x00000008,
+        Unk0x10 = 0x00000010,
+        Unk0x20 = 0x00000020,
+        Unk0x40 = 0x00000040,
+        Unk0x80 = 0x00000080,
+        Unk0x0100 = 0x00000100,
+        Unk0x0200 = 0x00000200,
+        Unk0x0400 = 0x00000400,
+        Unk0x0800 = 0x00000800,
+        Unk0x1000 = 0x00001000,
+        Unk0x2000 = 0x00002000,
+        Unk0x4000 = 0x00004000,
+        Unk0x8000 = 0x00008000,
+        Unk0x010000 = 0x00010000,
+        Unk0x020000 = 0x00020000,
+        Unk0x040000 = 0x00040000,
+        Unk0x080000 = 0x00080000,
+        Unk0x100000 = 0x00100000,
+        Unk0x200000 = 0x00200000,
+        Unk0x400000 = 0x00400000,
+        Unk0x800000 = 0x00800000,
+        Unkx01000000 = 0x01000000,
+        Unk0x02000000 = 0x02000000,
+        Unk0x04000000 = 0x04000000,
+        Unk0x08000000 = 0x08000000,
+        Unk0x10000000 = 0x10000000,
+        Unk0x20000000 = 0x20000000,
+        Unk0x40000000 = 0x40000000,
+        Unk0x80000000 = 0x80000000
+    }
+
     public enum Condition : uint {
     LessThan = 0x00,
     LessOrEqualTo = 0x01,
@@ -4112,10 +4459,10 @@ namespace MarvelData {
             Unk0x2000 = 0x00002000,
             Unk0x4000 = 0x00004000,
             Unk0x8000 = 0x00008000,
-            Unk0x10000 = 0x00010000,
-            Unk0x20000 = 0x00020000,
-            Unk0x40000 = 0x00040000,
-            Unk0x80000 = 0x00080000,
+            Unk0x010000 = 0x00010000,
+            Unk0x020000 = 0x00020000,
+            Unk0x040000 = 0x00040000,
+            Unk0x080000 = 0x00080000,
             Unk0x100000 = 0x00100000,
             Unk0x200000 = 0x00200000,
             Unk0x400000 = 0x00400000,
