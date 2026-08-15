@@ -28,7 +28,10 @@ namespace AnmChrEdit
         public AnmChrSubEntry commandBlockCopyInstance;
         public CmdSpAtkEntry spatkCopyInstance = new CmdSpAtkEntry();
         public byte[] commandCopyInstance;
-        
+        public bool CopiedMultipleCommands = false;
+        public List<List<byte>> CopiedMultipleCommandsData;
+
+        public int CopiedCommandCount = 0;
         public List<List<int>> selectedSubSubIndices;
         public List<int> selectedSubIndices;
 
@@ -1214,41 +1217,97 @@ namespace AnmChrEdit
             if (tablefile.table[animBox.SelectedIndex].bHasData
                 && tablefile.table[animBox.SelectedIndex] is AnmChrEntry)
             {
-                AnmChrEntry entry = (AnmChrEntry)tablefile.table[animBox.SelectedIndex];
-                AELogger.Log("copying subsub " + animBox.SelectedIndex + "." + commandBlocksBox.SelectedIndex + "." + commandsBox.SelectedIndex);
-                byte[] source = entry.subEntries[commandBlocksBox.SelectedIndex].subsubEntries[commandsBox.SelectedIndex];
-                commandCopyInstance = new byte[source.Length];
-                source.CopyTo(commandCopyInstance, 0);
+                if (commandsBox.SelectedItems.Count > 1)
+                {
+                    //CopiedMultipleCommandsData.Clear();
+                    CopiedMultipleCommandsData = new List<List<byte>>();
+                    AnmChrEntry[] Entries = new AnmChrEntry[commandsBox.SelectedItems.Count];
+                    List<byte> source = new List<byte>();
+                    for (int i = 0; i < commandsBox.SelectedItems.Count; i++) 
+                    {
+                        Entries[i] = (AnmChrEntry)tablefile.table[animBox.SelectedIndex];
+                        source.AddRange(Entries[i].subEntries[commandBlocksBox.SelectedIndex].subsubEntries[commandsBox.SelectedIndices[i]]);
+                        CopiedMultipleCommandsData.Add(new List<byte>());
+                        CopiedMultipleCommandsData[i].AddRange(source);
+                        source.Clear();
+                    }
+                    commandCopyInstance = new byte[source.Count];
+                    source.CopyTo(commandCopyInstance, 0);
 
-                commandsPasteButton.Enabled = true;
-                pasteCommandsToolStripMenuItem.Enabled = true;
-                pasteCommandToolStripMenuItem.Enabled = true;
+                    commandsPasteButton.Enabled = true;
+                    pasteCommandsToolStripMenuItem.Enabled = true;
+                    pasteCommandToolStripMenuItem.Enabled = true;
+                    CopiedMultipleCommands = true;
+                    CopiedCommandCount = 5;
+                }
+                else
+                {
+                    AnmChrEntry entry = (AnmChrEntry)tablefile.table[animBox.SelectedIndex];
+                    AELogger.Log("copying subsub " + animBox.SelectedIndex + "." + commandBlocksBox.SelectedIndex + "." + commandsBox.SelectedIndex);
+                    byte[] source = entry.subEntries[commandBlocksBox.SelectedIndex].subsubEntries[commandsBox.SelectedIndex];
+                    commandCopyInstance = new byte[source.Length];
+                    source.CopyTo(commandCopyInstance, 0);
+
+                    commandsPasteButton.Enabled = true;
+                    pasteCommandsToolStripMenuItem.Enabled = true;
+                    pasteCommandToolStripMenuItem.Enabled = true;
+                    CopiedMultipleCommands = false;
+                    CopiedCommandCount = 1;
+                }
             }
         }
-
         private void commandsPasteButton_Click(object sender, EventArgs e)
         {
             if (tablefile.table[animBox.SelectedIndex].bHasData
                 && tablefile.table[animBox.SelectedIndex] is AnmChrEntry
                 && commandCopyInstance != null)
             {
-                AnmChrEntry entry = (AnmChrEntry)tablefile.table[animBox.SelectedIndex];
-                AELogger.Log("pasting subsub to " + animBox.SelectedIndex + "." + commandsBox.SelectedIndex);
-                byte[] dest = new byte[commandCopyInstance.Length];
-                commandCopyInstance.CopyTo(dest, 0);
-                entry.subEntries[commandBlocksBox.SelectedIndex].subsubEntries.Add(dest);
-                entry.subEntries[commandBlocksBox.SelectedIndex].subsubPointers.Add(uint.MaxValue);
-                entry.subEntries[commandBlocksBox.SelectedIndex].subsubIndices.Add(0);
+                if (CopiedMultipleCommands == true) 
+                {
+                    AnmChrEntry entry = (AnmChrEntry)tablefile.table[animBox.SelectedIndex];
+                    AELogger.Log("pasting subsub to " + animBox.SelectedIndex + "." + commandsBox.SelectedIndex);
 
-                bDisableSubUpdate = true;
-                bDisableSubSubUpdate = true;
-                commandsBox.DataSource = null;
-                subsubDataSource = entry.subEntries[commandBlocksBox.SelectedIndex].GetCommandList();
-                commandsBox.DataSource = subsubDataSource;
+                    for (int i = 0; i < CopiedMultipleCommandsData.Count; i++) 
+                    {
+                        byte[] dest = new byte[CopiedMultipleCommandsData[i].Count];
+                        CopiedMultipleCommandsData[i].CopyTo(dest, 0);
+                        entry.subEntries[commandBlocksBox.SelectedIndex].subsubEntries.Add(dest);
+                        entry.subEntries[commandBlocksBox.SelectedIndex].subsubPointers.Add(uint.MaxValue);
+                        entry.subEntries[commandBlocksBox.SelectedIndex].subsubIndices.Add(0);
 
-                bDisableSubSubUpdate = false;
-                bDisableSubUpdate = false;
-                commandsBox.SelectedIndex = commandsBox.Items.Count-1;
+                        bDisableSubUpdate = true;
+                        bDisableSubSubUpdate = true;
+                        commandsBox.DataSource = null;
+
+                        subsubDataSource = entry.subEntries[commandBlocksBox.SelectedIndex].GetCommandList();
+                        commandsBox.DataSource = subsubDataSource;
+
+                        bDisableSubSubUpdate = false;
+                        bDisableSubUpdate = false;
+                        commandsBox.SelectedIndex = commandsBox.Items.Count - 1;
+                    }
+
+                }
+                else
+                {
+                    AnmChrEntry entry = (AnmChrEntry)tablefile.table[animBox.SelectedIndex];
+                    AELogger.Log("pasting subsub to " + animBox.SelectedIndex + "." + commandsBox.SelectedIndex);
+                    byte[] dest = new byte[commandCopyInstance.Length];
+                    commandCopyInstance.CopyTo(dest, 0);
+                    entry.subEntries[commandBlocksBox.SelectedIndex].subsubEntries.Add(dest);
+                    entry.subEntries[commandBlocksBox.SelectedIndex].subsubPointers.Add(uint.MaxValue);
+                    entry.subEntries[commandBlocksBox.SelectedIndex].subsubIndices.Add(0);
+
+                    bDisableSubUpdate = true;
+                    bDisableSubSubUpdate = true;
+                    commandsBox.DataSource = null;
+                    subsubDataSource = entry.subEntries[commandBlocksBox.SelectedIndex].GetCommandList();
+                    commandsBox.DataSource = subsubDataSource;
+
+                    bDisableSubSubUpdate = false;
+                    bDisableSubUpdate = false;
+                    commandsBox.SelectedIndex = commandsBox.Items.Count - 1;
+                }
             }
         }
 

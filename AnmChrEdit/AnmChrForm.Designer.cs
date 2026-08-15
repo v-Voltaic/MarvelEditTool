@@ -276,7 +276,7 @@ namespace AnmChrEdit
             this.disableCommandBlockToolStripMenuItem1,
             this.pasteCommandBlockToolStripMenuItem1});
             this.commandBlockToolStripMenuItem.Name = "commandBlockToolStripMenuItem";
-            this.commandBlockToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.commandBlockToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.commandBlockToolStripMenuItem.Text = "Command Block";
             // 
             // copyCommandBlockToolStripMenuItem1
@@ -318,7 +318,7 @@ namespace AnmChrEdit
             this.deleteCommandsToolStripMenuItem,
             this.pasteCommandsToolStripMenuItem});
             this.commandsToolStripMenuItem.Name = "commandsToolStripMenuItem";
-            this.commandsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.commandsToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.commandsToolStripMenuItem.Text = "Command";
             // 
             // copyCommandsToolStripMenuItem
@@ -352,7 +352,7 @@ namespace AnmChrEdit
             this.hex8ToolStripMenuItem,
             this.hex16ToolStripMenuItem});
             this.formatDisplayToolStripMenuItem.Name = "formatDisplayToolStripMenuItem";
-            this.formatDisplayToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.formatDisplayToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.formatDisplayToolStripMenuItem.Text = "Format Display";
             // 
             // unsetToolStripMenuItem
@@ -382,7 +382,7 @@ namespace AnmChrEdit
             // tutorialFilesToolStripMenuItem
             // 
             this.tutorialFilesToolStripMenuItem.Name = "tutorialFilesToolStripMenuItem";
-            this.tutorialFilesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.tutorialFilesToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.tutorialFilesToolStripMenuItem.Text = "Tutorial Files";
             this.tutorialFilesToolStripMenuItem.Click += new System.EventHandler(this.testImgButton_Click);
             // 
@@ -399,7 +399,7 @@ namespace AnmChrEdit
             // frameDataToolStripMenuItem
             // 
             this.frameDataToolStripMenuItem.Name = "frameDataToolStripMenuItem";
-            this.frameDataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.frameDataToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.frameDataToolStripMenuItem.Text = "Frame Data";
             // 
             // splitContainer2
@@ -492,6 +492,7 @@ namespace AnmChrEdit
             this.commandsBox.Margin = new System.Windows.Forms.Padding(2);
             this.commandsBox.Name = "commandsBox";
             this.commandsBox.ScrollAlwaysVisible = true;
+            this.commandsBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.commandsBox.Size = new System.Drawing.Size(397, 127);
             this.commandsBox.TabIndex = 0;
             this.commandsBox.SelectedIndexChanged += new System.EventHandler(this.commandsBox_SelectedIndexChanged);
