@@ -1207,13 +1207,14 @@ namespace MarvelData {
     public struct ShotXLChunk // Supports up to 3 entries
     {
         public float numberOfHitsToDestroy;
-        public float NumberOfHitsDurability;
+        public float numberOfHitsDurability;
         public float durability;
         public float durabilityUnk;
         public Durability durabilityType;
         public int unk354;
         public float unk358;
         public int unk35C;
+
         public int unk360; //Start of Entry 1
         public int unk364;
         public int unk368;
@@ -1238,6 +1239,7 @@ namespace MarvelData {
         public float unk3B4;
         public float HitboxSize;
         public int unk3BC;
+
         public int unk3C0; //Start of Entry 2
         public int unk3C4;
         public int unk3C8;
@@ -1262,6 +1264,7 @@ namespace MarvelData {
         public float unk414;
         public float Hitbox2Size;
         public int unk41C;
+
         public int unk420; // Start of Entry 3
         public int unk424;
         public int unk428;
@@ -4439,43 +4442,84 @@ namespace MarvelData {
     Self = 0x01,
     Opponent = 0x02
     }
-
+    public enum aType : uint
+    {
+        NonBlend = 0x00,
+        Blend = 0x01
+    }
+    public enum AnmFlagsI : uint //0_23
+    {
+        NoFlags = 0,
+        Unk0x01 = 0x00000001,
+        Unk0x02 = 0x00000002,
+        Unk0x04 = 0x00000004,
+        Unk0x08 = 0x00000008,
+        Unk0x10 = 0x00000010,
+        Unk0x20 = 0x00000020,
+        Unk0x40 = 0x00000040,
+        Unk0x80 = 0x00000080,
+        Unk0x0100 = 0x00000100,
+        Unk0x0200 = 0x00000200,
+        Unk0x0400 = 0x00000400,
+        Unk0x0800 = 0x00000800,
+        Unk0x1000 = 0x00001000,
+        Unk0x2000 = 0x00002000,
+        Unk0x4000 = 0x00004000,
+        Unk0x8000 = 0x00008000,
+        UpsideDown = 0x00010000,
+        Unk0x020000 = 0x00020000,
+        Unk0x040000 = 0x00040000,
+        Unk0x080000 = 0x00080000,
+        Unk0x100000 = 0x00100000,
+        CenterStage = 0x00200000,
+        ShrinkProp = 0x00400000,
+        FlipAnimOnP1 = 0x00800000,
+        Unkx01000000 = 0x01000000,
+        Unk0x02000000 = 0x02000000,
+        Unk0x04000000 = 0x04000000,
+        Unk0x08000000 = 0x08000000,
+        FreezeAnimation = 0x10000000,
+        CenterStage2 = 0x20000000,
+        Unk0x40000000 = 0x40000000,
+        FaceCamera = 0x80000000
+        
+    }
     public enum EnumUnk : uint
         {
-            None = 0,
-            Unk0x01 = 0x00000001,
-            Unk0x02 = 0x00000002,
-            Unk0x04 = 0x00000004,
-            Unk0x08 = 0x00000008,
-            Unk0x10 = 0x00000010,
-            Unk0x20 = 0x00000020,
-            Unk0x40 = 0x00000040,
-            Unk0x80 = 0x00000080,
-            Unk0x0100 = 0x00000100,
-            Unk0x0200 = 0x00000200,
-            Unk0x0400 = 0x00000400,
-            Unk0x0800 = 0x00000800,
-            Unk0x1000 = 0x00001000,
-            Unk0x2000 = 0x00002000,
-            Unk0x4000 = 0x00004000,
-            Unk0x8000 = 0x00008000,
-            Unk0x010000 = 0x00010000,
-            Unk0x020000 = 0x00020000,
-            Unk0x040000 = 0x00040000,
-            Unk0x080000 = 0x00080000,
-            Unk0x100000 = 0x00100000,
-            Unk0x200000 = 0x00200000,
-            Unk0x400000 = 0x00400000,
-            Unk0x800000 = 0x00800000,
-            Unkx01000000 = 0x01000000,
-            Unk0x02000000 = 0x02000000,
-            Unk0x04000000 = 0x04000000,
-            Unk0x08000000 = 0x08000000,
-            Unk0x10000000 = 0x10000000,
-            Unk0x20000000 = 0x20000000,
-            Unk0x40000000 = 0x40000000,
-            Unk0x80000000 = 0x80000000
-        }
+        None = 0,
+        Unk0x01 = 0x00000001,
+        Unk0x02 = 0x00000002,
+        Unk0x04 = 0x00000004,
+        Unk0x08 = 0x00000008,
+        Unk0x10 = 0x00000010,
+        Unk0x20 = 0x00000020,
+        Unk0x40 = 0x00000040,
+        Unk0x80 = 0x00000080,
+        Unk0x0100 = 0x00000100,
+        Unk0x0200 = 0x00000200,
+        Unk0x0400 = 0x00000400,
+        Unk0x0800 = 0x00000800,
+        Unk0x1000 = 0x00001000,
+        Unk0x2000 = 0x00002000,
+        Unk0x4000 = 0x00004000,
+        Unk0x8000 = 0x00008000,
+        Unk0x010000 = 0x00010000,
+        Unk0x020000 = 0x00020000,
+        Unk0x040000 = 0x00040000,
+        Unk0x080000 = 0x00080000,
+        Unk0x100000 = 0x00100000,
+        Unk0x200000 = 0x00200000,
+        Unk0x400000 = 0x00400000,
+        Unk0x800000 = 0x00800000,
+        Unkx01000000 = 0x01000000,
+        Unk0x02000000 = 0x02000000,
+        Unk0x04000000 = 0x04000000,
+        Unk0x08000000 = 0x08000000,
+        Unk0x10000000 = 0x10000000,
+        Unk0x20000000 = 0x20000000,
+        Unk0x40000000 = 0x40000000,
+        Unk0x80000000 = 0x80000000
+    }
 
 
         public enum SubChunkType : uint

@@ -97,7 +97,7 @@ namespace MarvelData
                 nameSB.Append(header.data.meterRequirement);
                 nameSB.Append("bar ");
             }
-
+            //TODO: make sure this applies to aCA 2-8 in a way that isnt completely illegibile
             switch (header.data.anmChrAction1)
             {
                 case 0x96:
@@ -127,11 +127,15 @@ namespace MarvelData
                 case 0x9E:
                     nameSB.Append("jH? ");
                     break;
+                case 0x0168:
+                    nameSB.Append("5S ");
+                    break;
+
                 default:
                     isEmpty = true;
                     break;
             }
-            
+
             if (header.data.anmChrAction1 != -1 && isEmpty)
             {
                 nameSB.Append(header.data.anmChrAction1.ToString("X") + "h ");

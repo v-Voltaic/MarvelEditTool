@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -362,6 +363,7 @@ namespace MarvelData
             //im never going to implement this am i
             switch (cmdName)
             {
+                
                 case string x when cmdName.StartsWith("0_00"):
                     if (subsubEntry.Length == 92)
                     {
@@ -376,23 +378,111 @@ namespace MarvelData
                     {
                         return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
                     }
-                 /*   
-                case string x when cmdName.StartsWith("0_01"):
-                    if (subsubEntry.Length == 92)
+                case string x when cmdName.Contains("0_23 "): //Animation Frame Skip
+                    if (subsubEntry.Length == 64)
                     {
-                        string commandName = "0_00 Comment: ";
-                        byte[] V1 = new byte[64];
-                        Array.Copy(subsubEntry, subsubEntry.Length - 68, V1, 0, 64);
-                        string S1 = Encoding.UTF8.GetString(V1, 0, 64).Replace("\0", "");
+                        string commandName = "0_23 Animation Frame Skip";
+                        byte[] lmt = new byte[4];
+                        byte[] anim = new byte[4];
+                        byte[] blend = new byte[4];
+                        byte[] skip = new byte[4];
+                        byte[] flag = new byte[4];
+                        Array.Copy(subsubEntry, subsubEntry.Length - 24, lmt, 0, 4);
+                        Array.Copy(subsubEntry, subsubEntry.Length - 20, anim, 0, 4);
+                        Array.Copy(subsubEntry, subsubEntry.Length - 16, blend, 0, 4);
+                        Array.Copy(subsubEntry, subsubEntry.Length - 12, skip, 0, 4);
+                        Array.Copy(subsubEntry, subsubEntry.Length - 8, flag, 0, 4);
+                        
+                        string S1 = BitConverter.ToInt32(lmt, 0).ToString("D");
+                        string S2 = BitConverter.ToInt32(anim, 0).ToString("D");
+                        string S3 = BitConverter.ToSingle(blend, 0).ToString("P");
+                        string S4 = BitConverter.ToSingle(skip, 0).ToString();
+                        AnmFlagsI flags = (AnmFlagsI)BitConverter.ToUInt32(flag, 0);
+                        string flagNames = flags.ToString("F");
                         if (IsDebug) { newName = "Debug "; }
-                        return newName + commandName + S1;
+                        return newName + commandName + " (LMT " + S1 + ", Anim " + S2 + ", Frame Skip " + S4 + ", " + S3 + " Blend, " + flagNames + ")";
                     }
                     else
                     {
                         return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
-                    }*/
+                    }
+                case string x when cmdName.StartsWith("0_26"):
+                    if (subsubEntry.Length == 32)
+                    {
+                        string commandName = "0_26 Animation Speed (";
+                        byte[] V1 = new byte[4];
+                        byte[] V2 = new byte[4];
+                        Array.Copy(subsubEntry, subsubEntry.Length - 8, V1, 0, 4);
+                        Array.Copy(subsubEntry, subsubEntry.Length - 4, V2, 0, 4);
+                        string S1 = BitConverter.ToSingle(V1, 0).ToString("P");
+                        aType flags = (aType)BitConverter.ToUInt32(V2, 0);
+                        string flagNames = flags.ToString("F");
+                        if (IsDebug) { newName = "Debug "; }
+                        return newName + commandName + S1 + ", " + flagNames + ")";
+                    }
+                    else
+                    {
+                        return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
+                    }
+                case string x when cmdName.StartsWith("1_79"):
+                    if (subsubEntry.Length == 24)
+                    {
+                        string commandName = "1_79 Animation Speed (";
+                        byte[] V1 = new byte[4];
+                        Array.Copy(subsubEntry, subsubEntry.Length - 4, V1, 0, 4);
+                        string S1 = BitConverter.ToSingle(V1, 0).ToString("P");
+                        if (IsDebug) { newName = "Debug "; }
+                        return newName + commandName + S1 + ")";
+                    }
+                    else
+                    {
+                        return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
+                    }
+                case string x when cmdName.StartsWith("1_10C"):
+                    if (subsubEntry.Length == 84)
+                    {
+                        string commandName = "1_10C Check Character (";
+                        byte[] V1 = new byte[64];
+                        Array.Copy(subsubEntry, subsubEntry.Length - 64, V1, 0, 64);
+                        string S1 = Encoding.UTF8.GetString(V1, 0, 64).Replace("\0", "");
+                        if (IsDebug) { newName = "Debug "; }
+                        return newName + commandName + S1 + ")";
+                    }
+                    else
+                    {
+                        return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
+                    }
+                case string x when cmdName.StartsWith("66_1B"):
+                    if (subsubEntry.Length == 76)
+                    {
+                        string commandName = "66_1B Detect Character By ID Name (";
+                        byte[] V1 = new byte[64];
+                        Array.Copy(subsubEntry, subsubEntry.Length - 64, V1, 0, 64);
+                        string S1 = Encoding.UTF8.GetString(V1, 0, 64).Replace("\0", "");
+                        if (IsDebug) { newName = "Debug "; }
+                        return newName + commandName + S1 + ")";
+                    }
+                    else
+                    {
+                        return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
+                    }
+                    /*   
+                   case string x when cmdName.StartsWith("0_01"):
+                       if (subsubEntry.Length == 92)
+                       {
+                           string commandName = "0_00 Comment: ";
+                           byte[] V1 = new byte[64];
+                           Array.Copy(subsubEntry, subsubEntry.Length - 68, V1, 0, 64);
+                           string S1 = Encoding.UTF8.GetString(V1, 0, 64).Replace("\0", "");
+                           if (IsDebug) { newName = "Debug "; }
+                           return newName + commandName + S1;
+                       }
+                       else
+                       {
+                           return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
+                       }*/
 
-                //case string x when cmdName.StartsWith("0_02"):
+                    //case string x when cmdName.StartsWith("0_02"):
 
 
 
@@ -552,7 +642,7 @@ namespace MarvelData
                     return cmdName + ", Size Error " + subsubEntry.Length.ToString("D");
                 }
             }
-            else if (cmdName.Contains("0_24 ")) //Animation Frame Skip
+            else if (cmdName.Contains("0_24 ")) //Blend Animation
             {
                 if (subsubEntry.Length == 64)
                 {
