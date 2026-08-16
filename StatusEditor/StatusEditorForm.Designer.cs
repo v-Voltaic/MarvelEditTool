@@ -88,6 +88,7 @@ namespace StatusEditor
             this.hexToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tutorialFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addSubChunkMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.addProfileEntryMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.insertEntryMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.entryDuplicateStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.entryExtendStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -324,7 +325,7 @@ namespace StatusEditor
             // 
             // shotNameTextBox
             // 
-            this.shotNameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.shotNameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel1.SetColumnSpan(this.shotNameTextBox, 2);
             this.shotNameTextBox.Enabled = false;
@@ -340,7 +341,7 @@ namespace StatusEditor
             // 
             // entryImportButton
             // 
-            this.entryImportButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.entryImportButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.entryImportButton.AutoSize = true;
             this.entryImportButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -358,7 +359,7 @@ namespace StatusEditor
             // 
             // entryUpButton
             // 
-            this.entryUpButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.entryUpButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.entryUpButton.AutoSize = true;
             this.entryUpButton.Enabled = false;
@@ -374,7 +375,7 @@ namespace StatusEditor
             // 
             // subChunkAddButton
             // 
-            this.subChunkAddButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.subChunkAddButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.subChunkAddButton.AutoSize = true;
             this.subChunkAddButton.Enabled = false;
@@ -390,7 +391,7 @@ namespace StatusEditor
             // 
             // subChunkDeleteButton
             // 
-            this.subChunkDeleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.subChunkDeleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.subChunkDeleteButton.AutoSize = true;
             this.subChunkDeleteButton.ContextMenuStrip = this.subChunkDeleteMenuStrip;
@@ -412,7 +413,7 @@ namespace StatusEditor
             // 
             // entryExportButton
             // 
-            this.entryExportButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.entryExportButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.entryExportButton.AutoSize = true;
             this.entryExportButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -430,7 +431,7 @@ namespace StatusEditor
             // 
             // entryDownButton
             // 
-            this.entryDownButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.entryDownButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.entryDownButton.AutoSize = true;
             this.entryDownButton.Enabled = false;
@@ -446,7 +447,7 @@ namespace StatusEditor
             // 
             // entryDeleteButton
             // 
-            this.entryDeleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.entryDeleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.entryDeleteButton.AutoSize = true;
             this.entryDeleteButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -462,7 +463,7 @@ namespace StatusEditor
             // 
             // entryInsertButton
             // 
-            this.entryInsertButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.entryInsertButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.entryInsertButton.AutoSize = true;
             this.entryInsertButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -758,6 +759,11 @@ namespace StatusEditor
             this.addSubChunkMenuStrip.Name = "addSubChunkMenuStrip";
             this.addSubChunkMenuStrip.Size = new System.Drawing.Size(61, 4);
             // 
+            // addProfileEntryMenuStrip
+            // 
+            this.addProfileEntryMenuStrip.Name = "addProfileEntryMenuStrip";
+            this.addProfileEntryMenuStrip.Size = new System.Drawing.Size(61, 4);
+            // 
             // insertEntryMenuStrip
             // 
             this.insertEntryMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -880,6 +886,7 @@ namespace StatusEditor
         private ToolStripMenuItem sHTShotToolStripMenuItem;
         private ToolStripMenuItem cBABaseActionToolStripMenuItem;
         private ContextMenuStrip addSubChunkMenuStrip;
+        private ContextMenuStrip addProfileEntryMenuStrip;
         private Label entriesTotalLabel;
         private Button entryDeleteButton;
         private Button entryInsertButton;
@@ -889,4 +896,3 @@ namespace StatusEditor
         private ToolStripMenuItem correctIndexToolStripMenuItem;
     }
 }
-

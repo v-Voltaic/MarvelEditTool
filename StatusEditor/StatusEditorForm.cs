@@ -36,10 +36,11 @@ namespace StatusEditor
         private bool isShtFile;
 
         public bool IsShtFile
-        { get 
+        {
+            get
             {
                 return tablefile.fileExtension.Contains("SHT");
-            } 
+            }
         }
 
         public StatusEditorForm()
@@ -142,8 +143,9 @@ namespace StatusEditor
             IEnumerable<TypeViewModel> typeList = GetEnumValuesList(type, isHex);
             TypeViewModel[] tempList = typeList.ToArray();
             tagsDataGridView.DataSource = null;
-            if (isHex) {
-                for (int i=0; i < tempList.Length; i++)
+            if (isHex)
+            {
+                for (int i = 0; i < tempList.Length; i++)
                 {
                     tempList[i].dec = (int.Parse(tempList[i].hex, System.Globalization.NumberStyles.HexNumber)).ToString();
                 }
@@ -162,7 +164,8 @@ namespace StatusEditor
                .Cast<Object>()
                .Select(t => new TypeViewModel
                {
-                   hex = isHex ? ((uint)t).ToString("X8") : ((int)t).ToString(),
+                   // go through Int64 so byte backed enums like CPIChar don't throw on the unbox
+                   hex = isHex ? unchecked((uint)Convert.ToInt64(t)).ToString("X8") : Convert.ToInt64(t).ToString(),
                    name = t.ToString()
                });
         }
@@ -348,12 +351,6 @@ namespace StatusEditor
                     tablefile = newTable;
                     ResetLayout(openFile, count);
                     animBox_SelectedIndexChanged(null, null);
-                    if (newTable.fileExtension.Contains("CPI"))
-                    {
-                        MessageBox.Show("Profile editing is extremely unstable and in development."
-                        + Environment.NewLine + "You will be prevented from saving while editing this file."
-                        , "Profile Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
                 }
                 else
                 {
@@ -398,9 +395,10 @@ namespace StatusEditor
                 openFile.Filter = "Intro or Outro ID File (*.cpi;*.1DF3E03E)|*.cpi;*.1DF3E03E";
             }
             else
+                // should now support profile files!
                 openFile.Filter = "Supported Data (" +
-                    "*.ccm;*.28DD8317;*.ati;*.227A8048;*.chs;*.3C41466B;*.cba;*.3C6EA504;*.csp;*.52A8DBF6;*.cli;*.5B486CCE;*.sht;*.10BE43D4;|" +
-                    "*.ccm;*.28DD8317;*.csp;*.52A8DBF6;*.ati;*.227A8048;*.chs;*.3C41466B;*.cba;*.3C6EA504;*.cli;*.5B486CCE;*.sht;*.10BE43D4;|" +
+                    "*.ccm;*.28DD8317;*.ati;*.227A8048;*.chs;*.3C41466B;*.cba;*.3C6EA504;*.csp;*.52A8DBF6;*.cli;*.5B486CCE;*.sht;*.10BE43D4;*.cpi;*.1DF3E03E;|" +
+                    "*.ccm;*.28DD8317;*.csp;*.52A8DBF6;*.ati;*.227A8048;*.chs;*.3C41466B;*.cba;*.3C6EA504;*.cli;*.5B486CCE;*.sht;*.10BE43D4;*.cpi;*.1DF3E03E;|" +
                     "AtkInfo Files (*.ati;*.227A8048)|*.ati;*.227A8048|BaseAct Files (*.cba;*.3C6EA504)|*.cba;*.3C6EA504|" +
                     "Cmdcombo Files (*.ccm;*.28DD8317)|*.ccm;*.28DD8317|Cmdspatk Files (*.csp;*.52A8DBF6)|*.csp;*.52A8DBF6|" +
                     "Status Files (*.chs;*.3C41466B)|*.chs;*.3C41466B|Collision Files (*.cli;*.5B486CCE)|.cli;*.5B486CCE|" +
@@ -463,13 +461,6 @@ namespace StatusEditor
 
         private void SaveButton_Click(object sender, EventArgs ev)
         {
-            if (tablefile.fileExtension.Contains("CPI"))
-            {
-                MessageBox.Show("Profile editing is extremely unstable and in development." + Environment.NewLine
-                + "You are locked out from saving while editing this file."
-                , "Profile Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
             if (bError || tablefile.fileExtension.Contains("SHT") ? !IsNameValid() : false)
             {
                 return;
@@ -732,6 +723,12 @@ namespace StatusEditor
         // TODO: remove me
         private void ExtendButton_Click(object sender, EventArgs e)
         {
+            if (tablefile.fileExtension.Contains("CPI"))
+            {
+                ShowAddProfileEntryMenu();
+                return;
+            }
+
             switch (MessageBox.Show(this, "Do you want to extend list?" + Environment.NewLine + "This action cannot be undone!", "Extend List", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
                 case DialogResult.No:
@@ -769,9 +766,12 @@ namespace StatusEditor
                 MVC3DataStructures.SubChunkTypeList.Sort();
                 MVC3DataStructures.SubChunkTypeList.ForEach(i => addSubChunkMenuStrip.Items.Add(i, null, DropDownItemSelectEvent));
 
-                if (screenPoint.Y + addSubChunkMenuStrip.Size.Height > Screen.PrimaryScreen.WorkingArea.Height) {
+                if (screenPoint.Y + addSubChunkMenuStrip.Size.Height > Screen.PrimaryScreen.WorkingArea.Height)
+                {
                     addSubChunkMenuStrip.Show(subChunkAddButton, new Point(0, -addSubChunkMenuStrip.Size.Height));
-                } else {
+                }
+                else
+                {
                     addSubChunkMenuStrip.Show(subChunkAddButton, new Point(0, subChunkAddButton.Height));
                 }
             }
@@ -780,9 +780,12 @@ namespace StatusEditor
         private void SubChunkDeleteButton_Click(object sender, EventArgs e)
         {
             Point screenPoint = subChunkDeleteButton.PointToScreen(new Point(subChunkDeleteButton.Left, subChunkDeleteButton.Bottom));
-            if (screenPoint.Y + subChunkDeleteMenuStrip.Size.Height > Screen.PrimaryScreen.WorkingArea.Height) {
+            if (screenPoint.Y + subChunkDeleteMenuStrip.Size.Height > Screen.PrimaryScreen.WorkingArea.Height)
+            {
                 subChunkDeleteMenuStrip.Show(subChunkDeleteButton, new Point(0, -subChunkDeleteMenuStrip.Size.Height));
-            } else {
+            }
+            else
+            {
                 subChunkDeleteMenuStrip.Show(subChunkDeleteButton, new Point(0, subChunkDeleteButton.Height));
             }
         }
@@ -800,11 +803,11 @@ namespace StatusEditor
             entry.RemoveSubChunk(index);
             // Decrease the entry size
             entry.size -= 32;
-            // Update view while maintaining changed data - added string to prevent save conflict with SaveOldData() method
+            // Update view while maintaining changed data
             animBox_SelectedIndexChanged("removeSubChunk", null);
         }
 
-        // Iterates over table entries and sets indexes sequentially, correcting any out of place.
+        // Iterates over table entries and sets indexes sequentially
         // Throws error when called and there are empty entries in table
         public void CorrectIndexes()
         {
@@ -846,12 +849,14 @@ namespace StatusEditor
                     MultiStructEntry multientry = (MultiStructEntry)tablefile.table[i];
                     if (!multientry.bHasData)
                         tablefile.table.RemoveAt(i);
-                } else if (structViewType.Name.Contains("ATKInfo"))
+                }
+                else if (structViewType.Name.Contains("ATKInfo"))
                 {
                     MarvelData.StructEntry<ATKInfoChunk> atiEntry = (MarvelData.StructEntry<ATKInfoChunk>)tablefile.table[i];
                     if (!atiEntry.bHasData)
                         tablefile.table.RemoveAt(i);
-                } else if (structViewType.Name.Contains("BaseAct"))
+                }
+                else if (structViewType.Name.Contains("BaseAct"))
                 {
                     MarvelData.StructEntry<BaseActChunk> baseActEntry = (MarvelData.StructEntry<BaseActChunk>)tablefile.table[i];
                     if (!baseActEntry.bHasData)
@@ -876,7 +881,7 @@ namespace StatusEditor
             }
         }
 
-        // Moves entry N spaces. A positive number means moving down, a negative means up.
+        // Moves entry N spaces
         public void MoveEntry(int direction)
         {
             // Calculate new index using move direction
@@ -885,12 +890,12 @@ namespace StatusEditor
 
             // Checking bounds of the range
             if (newIndex < 0 || newIndex >= animBox.Items.Count)
-                return; // Index out of range - nothing to do
+                return; // Index out of range
 
             // Retrieve the data source
             var dataSource = animBox.DataSource as IList;
             if (dataSource == null)
-                return; // DataSource is not a list - nothing to do
+                return; // DataSource is not a list
 
             // Get the selected item
             var selected = animBox.SelectedItem;
@@ -919,7 +924,13 @@ namespace StatusEditor
         {
             // Checking selected item
             if (animBox.SelectedItem == null || animBox.SelectedIndex <= 0 || animBox.SelectedIndex + 1 > tablefile.TotalEntries)
-                return; // Out of bounds or first entry - nothing to do
+                return; // Out of bounds
+
+            if (tablefile.fileExtension.Contains("CPI"))
+            {
+                MoveProfileSelection(-1);
+                return;
+            }
 
             MoveEntry(-1);
             RemoveEmptySets();
@@ -932,13 +943,66 @@ namespace StatusEditor
         {
             // Checking selected item
             if (animBox.SelectedItem == null || animBox.SelectedIndex < 0 || animBox.SelectedIndex + 1 >= tablefile.TotalEntries)
-                return; // Out of bounds or last entry - nothing to do
+                return; // Out of bounds
+
+            if (tablefile.fileExtension.Contains("CPI"))
+            {
+                MoveProfileSelection(1);
+                return;
+            }
 
             MoveEntry(1);
             RemoveEmptySets();
             CorrectIndexes();
             RefreshData();
             animBox_SelectedIndexChanged("moveEntryDown", null);
+        }
+
+        // Lets user add new intro or victory entry.
+        private void ShowAddProfileEntryMenu()
+        {
+            addProfileEntryMenuStrip.Items.Clear();
+            addProfileEntryMenuStrip.Items.Add("Add Intro", null, (s, e) => AddProfileEntry(true));
+            addProfileEntryMenuStrip.Items.Add("Add Victory", null, (s, e) => AddProfileEntry(false));
+
+            Point screenPoint = entryInsertButton.PointToScreen(new Point(entryInsertButton.Left, entryInsertButton.Bottom));
+            if (screenPoint.Y + addProfileEntryMenuStrip.Size.Height > Screen.PrimaryScreen.WorkingArea.Height)
+            {
+                addProfileEntryMenuStrip.Show(entryInsertButton, new Point(0, -addProfileEntryMenuStrip.Size.Height));
+            }
+            else
+            {
+                addProfileEntryMenuStrip.Show(entryInsertButton, new Point(0, entryInsertButton.Height));
+            }
+        }
+
+        private void AddProfileEntry(bool bIntro)
+        {
+            if (structView.Enabled && animBox.SelectedIndex >= 0)
+            {
+                SaveOldData(animBox.SelectedIndex);
+            }
+            tablefile.AddProfileEntry(bIntro);
+            RefreshData();
+            animBox.SelectedIndex = bIntro ? tablefile.cpiIntroCount : animBox.Items.Count - 1;
+            animBox_SelectedIndexChanged("addProfileEntry", null);
+        }
+
+        // CPI reorder thing.
+        private void MoveProfileSelection(int direction)
+        {
+            int index = animBox.SelectedIndex;
+            if (structView.Enabled)
+            {
+                SaveOldData(index);
+            }
+            if (!tablefile.MoveProfileEntry(index, direction))
+            {
+                return;
+            }
+            RefreshData();
+            animBox.SelectedIndex = index + direction;
+            animBox_SelectedIndexChanged("moveProfileEntry", null);
         }
 
         // checks if a subchunk can be added
@@ -957,7 +1021,7 @@ namespace StatusEditor
                 }
             }
             return true;
-        } 
+        }
 
         private void formatButton_Click(object sender, EventArgs e)
         {
@@ -974,8 +1038,8 @@ namespace StatusEditor
             tableNames = tablefile.GetNames();
             animBox.DataSource = tableNames;
             if (s >= tableNames.Count)
-            { 
-                s = 0; 
+            {
+                s = 0;
             } //fixes outofbounds when loading new file
             animBox.SelectedIndex = s;
             animBox.TopIndex = top;
@@ -983,6 +1047,7 @@ namespace StatusEditor
         }
 
         // Ugly solution... every second duplicate clears the first copied entry
+        // TODO: Clean this!!!
         private void RefreshDataAlt()
         {
             bDisableUpdate = true;
@@ -1032,7 +1097,7 @@ namespace StatusEditor
                 }
             }
         }
-        
+
         private int SaveOldData(StructEntryBase entry, Type entryType, int offset)
         {
             //if (!(tablefile.table[index] is StatusEntry))
@@ -1091,7 +1156,7 @@ namespace StatusEditor
             }
             if (structView.Enabled && animBox.SelectedIndex >= 0)
             {
-                if (sender==null)
+                if (sender == null)
                     SaveOldData(previousSelectedIndex); //TODO: check again why is this here?!
 
                 RefreshDeleteSubchunkButton();
@@ -1225,14 +1290,22 @@ namespace StatusEditor
                 structView.Columns[1].DefaultCellStyle.ForeColor = Color.Black;
 
                 correctIndexToolStripMenuItem.Enabled = !structViewType.Name.Contains("ATKInfo") && !tablefile.fileExtension.Contains("CPI") && !tablefile.fileExtension.Contains("CHS"); // TODO: create a propper get type method
-                entryExportButton.Enabled = !tablefile.fileExtension.Contains("CPI");
-                entryImportButton.Enabled = !tablefile.fileExtension.Contains("CPI");
-                entryDeleteButton.Enabled = !structViewType.Name.Contains("ATKInfo") && !structViewType.Name.Contains("BaseAct") && !tablefile.fileExtension.Contains("CPI"); // TODO: create a propper get type method
+                entryExportButton.Enabled = true;
+                entryImportButton.Enabled = true;
+                // CPI can delete anything except entry 0
+                entryDeleteButton.Enabled = tablefile.fileExtension.Contains("CPI")
+                    ? animBox.SelectedIndex > 0
+                    : !structViewType.Name.Contains("ATKInfo") && !structViewType.Name.Contains("BaseAct"); // TODO: create a propper get type method
                 entryDuplicateStripMenuItem.Enabled = entryInsertButton.Visible && !tablefile.fileExtension.Contains("CPI") && !tablefile.fileExtension.Contains("CHS");
-                entryInsertButton.Enabled = !tablefile.fileExtension.Contains("CPI") && !tablefile.fileExtension.Contains("CHS");
+                // the Extend List item lives in this button's dropdown
+                entryInsertButton.Enabled = !tablefile.fileExtension.Contains("CHS");
+                entryExtendStripMenuItem.Enabled = entryInsertButton.Visible;
                 entryInsertButton.Visible = !tablefile.fileExtension.Contains("SHT");
-                entryUpButton.Enabled = (animBox.SelectedIndex > 0) && !tablefile.fileExtension.Contains("CPI")/* && !structViewType.Name.Contains("ATKInfo")*/; // TODO: create a propper get type method
-                entryDownButton.Enabled = (animBox.SelectedIndex + 1  < tablefile.TotalEntries) &&!tablefile.fileExtension.Contains("CPI") /*&& !structViewType.Name.Contains("ATKInfo")*/; // TODO: create a propper get type method
+                entryUpButton.Enabled = tablefile.fileExtension.Contains("CPI")
+                    ? animBox.SelectedIndex > 1
+                    : animBox.SelectedIndex > 0/* && !structViewType.Name.Contains("ATKInfo")*/; // TODO: create a propper get type method
+                entryDownButton.Enabled = (animBox.SelectedIndex + 1 < tablefile.TotalEntries)
+                    && (!tablefile.fileExtension.Contains("CPI") || animBox.SelectedIndex > 0) /*&& !structViewType.Name.Contains("ATKInfo")*/; // TODO: create a propper get type method
                 subChunkAddButton.Enabled = tablefile.table[animBox.SelectedIndex] is MultiStructEntry;
                 subChunkDeleteButton.Enabled = tablefile.table[animBox.SelectedIndex] is MultiStructEntry;
 
@@ -1327,7 +1400,7 @@ namespace StatusEditor
             string temp = null;
             for (int i = 0; i < numFields; i++)
             {
-                
+
                 object value = fieldList[i].GetValue(entrydataobject);
                 //if (i == 0)
                 //{
@@ -1398,7 +1471,7 @@ namespace StatusEditor
         }
 
         // Bottom row information is added here when created
-        private void processTag(string tag) 
+        private void processTag(string tag)
         {
             // TODO: replace if else with switch case
             if (tag.Equals("AttackLevel"))
@@ -1415,7 +1488,7 @@ namespace StatusEditor
                 AddTags(typeof(StatusFlags), true);
             else if (tag.Contains("OppHitAnim"))
                 AddTags(typeof(OppHitAnim), false);
-            else if (tag.Contains("SecondaryHitEffect") || tag.Contains("NegatedChipDamageEffect") || tag.Contains("HitEffect") || tag.Contains("BlockEffect")|| tag.Contains("SecondaryBlockEffect")|| tag.Contains("OwnerAttackNullifiedEffect")|| tag.Contains("GroundImpactEffect"))
+            else if (tag.Contains("SecondaryHitEffect") || tag.Contains("NegatedChipDamageEffect") || tag.Contains("HitEffect") || tag.Contains("BlockEffect") || tag.Contains("SecondaryBlockEffect") || tag.Contains("OwnerAttackNullifiedEffect") || tag.Contains("GroundImpactEffect"))
                 AddTags(typeof(HitEffect), false);
             else if (tag.Contains("state"))
                 AddTags(typeof(BaseActState), false);
@@ -1449,8 +1522,8 @@ namespace StatusEditor
                 AddTags(typeof(HitSFXSubGroup), false);
             else if (tag.Contains("hitSFXEntry"))
                 AddTags(typeof(HitSFXEntry), false);
-            //else if (tag.Contains("SelfID") || tag.Contains("CharacterA") || tag.Contains("CharacterB") || tag.Contains("CharacterC") || tag.Contains("CharacterD") )
-            //    AddTags(typeof(CPIChar), false);
+            else if (tag.Contains("SelfID") || tag.Contains("CharacterA") || tag.Contains("CharacterB") || tag.Contains("CharacterC") || tag.Contains("CharacterD"))
+                AddTags(typeof(CPIChar), true); // hex, since every ID and selector is documented in hex
             else if (tag.Contains("IdentityFlags"))
                 AddTags(typeof(ProfileFlags), true);
             else if (tag.Contains("IdentityFlags2"))
@@ -1625,7 +1698,8 @@ namespace StatusEditor
                 shotNameTextBox.BackColor = Color.PaleVioletRed;
                 shotNameTextBox.Focus();
                 bStatus = false;
-            } else
+            }
+            else
             {
                 shotNameTextBox.BackColor = Color.White;
             }
@@ -1682,12 +1756,24 @@ namespace StatusEditor
         private void DeleteButton_Click(object sender, EventArgs e)
         {
 
-            switch (MessageBox.Show(this, "Delete current entry?"  + Environment.NewLine 
+            switch (MessageBox.Show(this, "Delete current entry?" + Environment.NewLine
             + "This action cannot be undone!", "Delete Entry", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
                 case DialogResult.No:
                     break;
                 default:
+                    if (tablefile.fileExtension.Contains("CPI"))
+                    {
+                        int cpiIndex = animBox.SelectedIndex;
+                        tablefile.DeleteProfileEntry(cpiIndex);
+                        RefreshData();
+                        if (animBox.Items.Count > 0)
+                        {
+                            animBox.SelectedIndex = Math.Min(cpiIndex, animBox.Items.Count - 1);
+                        }
+                        animBox_SelectedIndexChanged("deleteEntry", null);
+                        break;
+                    }
                     DeleteEntry();
                     RemoveEmptySets();
                     CorrectIndexes();
@@ -1733,6 +1819,12 @@ namespace StatusEditor
 
         private void ExtendListToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (tablefile.fileExtension.Contains("CPI"))
+            {
+                ShowAddProfileEntryMenu();
+                return;
+            }
+
             switch (MessageBox.Show(this, "Do you want to extend the list by adding an empty entry at the bottom?",
             "Extend List", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
@@ -1752,7 +1844,7 @@ namespace StatusEditor
 
         private void CorrectIndexToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            switch (MessageBox.Show(this, "All entries with empty data will also be removed."  + Environment.NewLine 
+            switch (MessageBox.Show(this, "All entries with empty data will also be removed." + Environment.NewLine
             + "Do you want to proceed?", "Correct Index", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
                 case DialogResult.No:
